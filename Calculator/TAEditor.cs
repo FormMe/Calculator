@@ -4,168 +4,115 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Calculator
+namespace Convertor_p1_p2
 {
-    abstract class Editor
+    public abstract class Editor
     {
-        private int _base;
+        protected int _base;
+        public string Number { get; set; }
+
         public int Base
         {
-            get { return _base; }
             set
             {
                 if (value >= 2 && value <= 16)
                     _base = value;
             }
+            get { return _base; }
         }
-        
 
-        public string number { get; protected set; }
-
-        public abstract bool EqZero();
-        public abstract void Sign();
-        public abstract void BackSpace();
-        public abstract void Clear();
+        public virtual void Sign()
+        {
+            if (Number[0] == '-')
+                Number = Number.Substring(1, Number.Length - 1);
+            else
+                Number = "-" + Number;
+        }
+        public void Clear()
+        {
+            Number = "0";
+        }
         public abstract void Separate();
+        public abstract void BackSpace();
         public abstract void AddDigit(char n);
 
-        protected abstract void AddDigitLS(char n);
-        protected abstract void AddDigitRS(char n);
-    }
-
-    class FracEditor : Editor
-    {
-        public override bool EqZero()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Sign()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void BackSpace()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Clear()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Separate()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void AddDigit(char n)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void AddDigitLS(char n)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void AddDigitRS(char n)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    class RealEditor : Editor
-    {
-        public RealEditor()
-        {
-            number = "0";
-        }
-
-        public override bool EqZero()
-        {
-            return number == "0";
-        }
-
-        public override void Sign()
-        {
-            if (number.First() == '-')
-                number = number.Substring(1, number.Length - 1);
-            else
-                number = "-" + number;
-        }
-
-        public override void BackSpace()
-        {
-            if (number.Length == 1) number = "0";
-            else
-                if (number.Last() == '0' && number[number.Length - 2] == '.')
-                number = number.Substring(0, number.Length - 2);
-            else
-                number = number.Substring(0, number.Length - 1);
-        }
-
-        public override void Clear()
-        {
-            number = "0";
-        }
-
-        public override void Separate()
-        {
-            if (!number.Contains('.'))
-                number += ".";
-        }
-
-        public override void AddDigit(char n)
-        {
-            if (PCharToInt(n) > Base - 1 || number.Length >= 34) return;
-            switch (number)
-            {
-                case "0":
-                    {
-                        number = n.ToString();
-                        break;
-                    }
-                case "-0":
-                    {
-                        number = "-" + n;
-                        break;
-                    }
-                default:
-                    {
-                        number += n;
-                        break;
-                    }
-            }
-        }
-
-        protected override void AddDigitLS(char n)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void AddDigitRS(char n)
-        {
-            throw new NotImplementedException();
-        }
-
-        private int PCharToInt(char a)
+        protected int PCharToInt(char a)
         {
             return (a >= 'A') ? 10 + ((int)a - (int)'A') : int.Parse(a.ToString());
         }
     }
 
-    class ComplexEditor : Editor
+    public class RealEditor : Editor
     {
-        RealEditor Re;
-        RealEditor Im;
-        public override bool EqZero()
+        public RealEditor()
         {
-            return Re.EqZero() && Im.EqZero();
+            Number = "0";
+        }
+        public override void Separate()
+        {
+            if (!Number.Contains('.'))
+                Number += ".";
         }
 
-        public override void Sign()
+        public override void BackSpace()
+        {
+            if (Number.Length == 1) Number = "0";
+            else
+                if (Number[Number.Length - 1] == '0' && Number[Number.Length - 2] == '.')
+                Number = Number.Substring(0, Number.Length - 2);
+            else
+                Number = Number.Substring(0, Number.Length - 1);
+        }
+
+        public override void AddDigit(char n)
+        {
+            if (PCharToInt(n) > _base - 1) return;
+            switch (Number)
+            {
+                case "0":
+                {
+                    Number = n.ToString();
+                    break;
+                }
+                case "-0":
+                {
+                    Number = "-" + n;
+                    break;
+                }
+                default:
+                {
+                    Number += n;
+                    break;
+                }
+            }
+        }
+    }
+
+    public class FracEditor : RealEditor
+    {
+        public FracEditor()
+        {
+            Number = "0";
+        }
+        public override void Separate()
+        {
+            if (!Number.Contains('/'))
+                Number += "/";
+        }
+        public override void BackSpace()
+        {
+            if (Number.Length == 1) Number = "0";
+            else
+                if (Number[Number.Length - 1] == '0' && Number[Number.Length - 2] == '/')
+                Number = Number.Substring(0, Number.Length - 2);
+            else
+                Number = Number.Substring(0, Number.Length - 1);
+        }
+    }
+
+    public class ComplexEditor : Editor
+    {
+        public override void Separate()
         {
             throw new NotImplementedException();
         }
@@ -175,27 +122,7 @@ namespace Calculator
             throw new NotImplementedException();
         }
 
-        public override void Clear()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Separate()
-        {
-            throw new NotImplementedException();
-        }
-
         public override void AddDigit(char n)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void AddDigitLS(char n)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void AddDigitRS(char n)
         {
             throw new NotImplementedException();
         }

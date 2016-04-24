@@ -57,6 +57,7 @@ namespace Calculator
                         l /= r;
                         break;
                 }
+                r = null;
             }
             catch (Exception ex)
             {
