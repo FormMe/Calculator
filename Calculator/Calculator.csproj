@@ -62,6 +62,8 @@
     <Compile Include="TAProc.cs" />
     <Compile Include="TAEditor.cs" />
     <Compile Include="TANumber.cs" />
+    <Compile Include="UT_10_p.cs" />
+    <Compile Include="UT_p_10.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
