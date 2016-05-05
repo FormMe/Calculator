@@ -9,9 +9,10 @@ namespace Calculator
 {
     public abstract class Number
     {
-        public string number => GetNum();
-
-        protected abstract string GetNum();
+        public override string ToString()
+        {
+            return base.ToString();
+        }
 
         public abstract bool EqZero();
         public abstract Number Sqr();
@@ -51,7 +52,12 @@ namespace Calculator
             num = n;
         }
 
-        protected override string GetNum()
+        public Real(string n)
+        {
+            double.TryParse(n, out num);
+        }
+
+        public override string ToString()
         {
             return num.ToString();
         }
@@ -137,12 +143,20 @@ namespace Calculator
             den = d;
         }
 
-        protected override string GetNum()
+        public Frac(string n)
+        {
+            var nn = n.Split('/').ToArray();
+            BigInteger.TryParse(nn[0], out num);
+            BigInteger.TryParse(nn[1], out den);
+        }
+
+        public override string ToString()
         {
             if (den == 1) return num.ToString();
             if (EqZero()) return "0";
             return num + "/" + den;
         }
+
         public override bool EqZero()
         {
             return num == 0;
@@ -268,10 +282,14 @@ namespace Calculator
             Re = re;
         }
 
-        protected override string GetNum()
+        public Complex(string n)
+        {
+
+        }
+        public override string ToString()
         {
             if (EqZero()) return "0";
-            return Re.number + " + " + Im.number + "i";
+            return Re + " + " + Im + "i";
         }
 
 

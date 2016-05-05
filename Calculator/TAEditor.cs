@@ -30,7 +30,7 @@ namespace Convertor_p1_p2
         }
         public void Clear()
         {
-            Number = "0";
+            Number = "";
         }
         public abstract void Separate();
         public abstract void BackSpace();
@@ -50,8 +50,9 @@ namespace Convertor_p1_p2
         }
         public override void Separate()
         {
-            if (!Number.Contains('.'))
-                Number += ".";
+            if (Number.Contains('.')) return;
+            if (Number.Length == 0) Number += "0.";
+            else Number += ".";
         }
 
         public override void BackSpace()
@@ -70,20 +71,20 @@ namespace Convertor_p1_p2
             switch (Number)
             {
                 case "0":
-                {
-                    Number = n.ToString();
-                    break;
-                }
+                    {
+                        Number = n.ToString();
+                        break;
+                    }
                 case "-0":
-                {
-                    Number = "-" + n;
-                    break;
-                }
+                    {
+                        Number = "-" + n;
+                        break;
+                    }
                 default:
-                {
-                    Number += n;
-                    break;
-                }
+                    {
+                        Number += n;
+                        break;
+                    }
             }
         }
     }
@@ -92,12 +93,13 @@ namespace Convertor_p1_p2
     {
         public FracEditor()
         {
-            Number = "0";
+            Number = "";
         }
         public override void Separate()
         {
-            if (!Number.Contains('/'))
-                Number += "/";
+            if (Number.Contains('/')) return;
+            if (Number.Length == 0) Number += "0.";
+            else Number += "/";
         }
         public override void BackSpace()
         {

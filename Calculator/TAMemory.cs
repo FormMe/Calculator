@@ -10,7 +10,6 @@ namespace Calculator
     class Memory
     {
         public Number num { set; get; }
-        public string number => num.number;
         private bool stat = false;
 
         public Memory()
@@ -27,5 +26,6 @@ namespace Calculator
         {
             if (stat) num += e;
         }
+        
     }
 }

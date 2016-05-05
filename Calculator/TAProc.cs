@@ -25,22 +25,45 @@ namespace Calculator
     {
         public Number l { get; set; }
         public Number r { get; set; }
-        public Operation op { get; set; }
-        public Function func { get; set; }
 
-        public Proc(Number l, Number r)
+        private Operation _op;
+
+        public Operation op
+        {
+            get { return _op; }
+            set
+            {
+                if (_op != Operation.None)
+                    RunOperation();
+                _op = value;
+            }
+        }
+
+        private Function _func;
+
+        public Function func
+        {
+            get { return _func; }
+            set
+            {
+                if (_func != Function.None)
+                    RunFunction();
+                _func = value;
+            }
+        }
+
+        public Proc()
         {
             op = Operation.None;
             func = Function.None;
-            this.l = l;
-            this.r = r;
         }
 
         public void RunOperation()
         {
             try
             {
-                switch (op)
+                if(r == null || l == null) return;
+                switch (_op)
                 {
                     case Operation.None:
                         break;
