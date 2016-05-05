@@ -32,7 +32,7 @@ namespace Calculator
         private Memory memory;
         private Proc proc;
 
-        public string preH;
+        public string preH = "";
         public string editable => editor.Number;
         public string memN => GetMem();
         public string operation;
@@ -50,6 +50,8 @@ namespace Calculator
 
         private UT_10_p converter10P;
         private UT_p_10 converterP10;
+
+        private bool isNewCalc = true;
 
         private string GetMem()
         {
@@ -91,9 +93,13 @@ namespace Calculator
                 {
                     case ".":
                     case "Decimal":
-                        editor.Separate(); break;
+                        ClearForNewCalc();
+                        editor.Separate();
+                        break;
                     case "+/-":
-                        editor.Sign(); break;
+                        ClearForNewCalc();
+                        editor.Sign();
+                        break;
                     case "CE":
                     case "Delete":
                         editor.Clear(); break;
@@ -106,7 +112,9 @@ namespace Calculator
                         preH = "";
                         break;
                     default:
-                        editor.AddDigit(char.Parse(command)); break;
+                        ClearForNewCalc();
+                        editor.AddDigit(char.Parse(command));
+                        break;
 
                     case "MR":
                         if (memory.Num != null)
@@ -129,52 +137,49 @@ namespace Calculator
                         break;
 
                     case "-":
-                        SetNum();
+                        SetNum(command);
                         proc.RunOperation();
                         proc.op = Operation.Sub;
                         SetResult(command);
                         break;
                     case "+":
-                        SetNum();
+                        SetNum(command);
                         proc.RunOperation();
                         proc.op = Operation.Add;
                         SetResult(command);
                         break;
                     case "*":
-                        SetNum();
+                        SetNum(command);
                         proc.RunOperation();
                         proc.op = Operation.Mult;
                         SetResult(command);
                         break;
                     case "/":
-                        SetNum();
+                        SetNum(command);
                         proc.RunOperation();
                         proc.op = Operation.Div;
                         SetResult(command);
                         break;
                     case "Sqr":
-                        SetNum();
-                        preH = command + "(" + proc.l + ")";
+                        SetNum(command);
                         proc.func = Function.Sqr;
                         proc.RunFunction();
                         SetResult(command);
                         break;
                     case "Sqrt":
-                        SetNum();
-                        preH = command + "(" + proc.l + ")";
+                        SetNum(command);
                         proc.func = Function.Sqrt;
                         proc.RunFunction();
                         SetResult(command);
                         break;
                     case "1/x":
-                        SetNum();
-                        preH = "Rev(" + proc.l + ")";
+                        SetNum(command);
                         proc.func = Function.Rev;
                         proc.RunFunction();
                         SetResult(command);
                         break;
                     case "=":
-                        SetNum();
+                        SetNum(command);
                         proc.RunFunction();
                         proc.RunOperation();
                         editor.Number = proc.l.ToString();
@@ -189,26 +194,40 @@ namespace Calculator
             }
         }
 
-        private void SetNum()
+        private void ClearForNewCalc()
+        {
+            if (isNewCalc)
+            {
+                editor.Clear();
+                isNewCalc = false;
+            }
+        }
+
+        private void SetNum(string command)
         {
             if (editor.Number == "") return;
 
             if (proc.l == null)
                 proc.l = ToNumber(editor.Number);
             else
-                proc.r = ToNumber(editor.Number);
+            {
+                if (!isNewCalc)
+                    proc.r = ToNumber(editor.Number);
+            }
+
+            if (command == "Sqr" || command == "Sqrt" || command == "1/x")
+            {
+                preH = command == "1/x" ? "Rev" : command;
+                preH += "(" + proc.l + ")";
+            }
+            else
+                preH = preH = proc.l + " " + command;
         }
         private void SetResult(string command)
         {
-            if (command == "Sqr" || command == "Sqrt" || command == "1/x")
-            {
-                editor.Number = proc.l.ToString();
-            }
-            else
-            {
-                preH = proc.l + " " + command;
-                editor.Clear();
-            }
+            preH = preH = proc.l + " " + command;
+            editor.Number = proc.l.ToString();
+            isNewCalc = true;
         }
 
         private Number ToNumber(string n)
