@@ -16,6 +16,10 @@ namespace Calculator
 
         public abstract bool EqZero();
         public abstract Number Sqr();
+        public virtual Number Sqrt()
+        {
+            return this;
+        }
         public abstract Number Rev();
 
         public static Number operator +(Number l, Number r) => l.Plus(r);
@@ -70,6 +74,11 @@ namespace Calculator
         public override Number Sqr()
         {
             return new Real(num * num);
+        }
+
+        public override Number Sqrt()
+        {
+            return new Real(Math.Sqrt(num));
         }
 
         public override Number Rev()
@@ -164,12 +173,12 @@ namespace Calculator
 
         public override Number Sqr()
         {
-            return new Frac(num * num, den * den);
+            return new Frac(num * num, den * den).Reduce();
         }
 
         public override Number Rev()
         {
-            return new Frac(den, num);
+            return new Frac(den, num).Reduce();
         }
 
         protected override Number Plus(object obj)
@@ -254,14 +263,8 @@ namespace Calculator
 
         private Number Reduce()
         {
-            BigInteger gcd;
-            do
-            {
-                gcd = BigInteger.GreatestCommonDivisor(num, den);
-                num /= gcd;
-                den /= gcd;
-            } while (gcd != 1);
-            return new Frac(num, den);
+            var gcd = BigInteger.GreatestCommonDivisor(num, den);
+            return new Frac(num / gcd, den / gcd);
         }
     }
 
@@ -301,6 +304,11 @@ namespace Calculator
         public override Number Sqr()
         {
             return new Complex((Real)(Re.Sqr() - Im.Sqr()), (Real)((new Real(2)) * Re * Im));
+        }
+
+        public override Number Sqrt()
+        {
+            throw new NotImplementedException();
         }
 
         public override Number Rev()

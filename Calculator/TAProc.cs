@@ -19,38 +19,17 @@ namespace Calculator
     {
         None,
         Rev,
-        Sqr
+        Sqr,
+        Sqrt
     };
     class Proc
     {
         public Number l { get; set; }
         public Number r { get; set; }
 
-        private Operation _op;
+        public Operation op;
+        public Function func;
 
-        public Operation op
-        {
-            get { return _op; }
-            set
-            {
-                if (_op != Operation.None)
-                    RunOperation();
-                _op = value;
-            }
-        }
-
-        private Function _func;
-
-        public Function func
-        {
-            get { return _func; }
-            set
-            {
-                if (_func != Function.None)
-                    RunFunction();
-                _func = value;
-            }
-        }
 
         public Proc()
         {
@@ -62,8 +41,8 @@ namespace Calculator
         {
             try
             {
-                if(r == null || l == null) return;
-                switch (_op)
+                if (r == null || l == null) return;
+                switch (op)
                 {
                     case Operation.None:
                         break;
@@ -97,10 +76,13 @@ namespace Calculator
                     case Function.None:
                         break;
                     case Function.Rev:
-                        l.Rev();
+                        l = l.Rev();
                         break;
                     case Function.Sqr:
-                        l.Sqr();
+                        l = l.Sqr();
+                        break;
+                    case Function.Sqrt:
+                        l = l.Sqrt();
                         break;
                 }
             }

@@ -116,43 +116,52 @@ namespace Calculator
                         memory.Add(proc.r); break;
 
                     case "-":
-                        SetNum(command);
+                        SetNum();
                         proc.RunOperation();
                         proc.op = Operation.Sub;
                         SetResult(command);
                         break;
                     case "+":
-                        SetNum(command);
+                        SetNum();
                         proc.RunOperation();
                         proc.op = Operation.Add;
                         SetResult(command);
                         break;
                     case "*":
-                        SetNum(command);
+                        SetNum();
                         proc.RunOperation();
                         proc.op = Operation.Mult;
                         SetResult(command);
                         break;
                     case "/":
-                        SetNum(command);
+                        SetNum();
                         proc.RunOperation();
                         proc.op = Operation.Div;
                         SetResult(command);
                         break;
                     case "Sqr":
-                        SetNum(command);
+                        SetNum();
+                        preH = command + "(" + proc.l + ")";
                         proc.func = Function.Sqr;
                         proc.RunFunction();
                         SetResult(command);
                         break;
+                    case "Sqrt":
+                        SetNum();
+                        preH = command + "(" + proc.l + ")";
+                        proc.func = Function.Sqrt;
+                        proc.RunFunction();
+                        SetResult(command);
+                        break;
                     case "1/x":
-                        SetNum(command);
+                        SetNum();
+                        preH = "Rev(" + proc.l + ")";
                         proc.func = Function.Rev;
                         proc.RunFunction();
                         SetResult(command);
                         break;
                     case "=":
-                        SetNum(command);
+                        SetNum();
                         proc.RunFunction();
                         proc.RunOperation();
                         editor.Number = proc.l.ToString();
@@ -167,7 +176,7 @@ namespace Calculator
             }
         }
 
-        private void SetNum(string command)
+        private void SetNum( )
         {
             if (editor.Number == "") return;
 
@@ -178,9 +187,8 @@ namespace Calculator
         }
         private void SetResult(string command)
         {
-            if (command == "Sqr" || command == "Rev")
+            if (command == "Sqr" || command == "Sqrt" || command == "1/x")
             {
-                preH = command + "(" + proc.l + ")";
                 editor.Number = proc.l.ToString();
             }
             else

@@ -20,7 +20,7 @@
 
         <Border BorderBrush="#FF34407A" BorderThickness="1" HorizontalAlignment="Left" Height="100" Margin="10,30,0,0" VerticalAlignment="Top" Width="335" Background="#FFA3D6E6">
             <Grid HorizontalAlignment="Left" Height="97" VerticalAlignment="Top" Width="335" Margin="-1,2,-1,-1">
-                <Label x:Name="editableNumberText" Content="65165165165" Margin="0,0,10,-16" VerticalAlignment="Bottom" HorizontalContentAlignment="Right" HorizontalAlignment="Right" Width="315" FontSize="18.667" Height="57" FontFamily="Calibri"/>
+                <Label x:Name="editableNumberText" Content="65165165165" Margin="0,0,10,-16" VerticalAlignment="Bottom" HorizontalContentAlignment="Right" HorizontalAlignment="Right" Width="315" FontSize="20" Height="57" FontFamily="Calibri"/>
                 <Label x:Name="preHistoryText" Content="6516516515" Margin="10,2,0,46" VerticalAlignment="Center" HorizontalContentAlignment="Right" FontSize="26.667" Height="49" HorizontalAlignment="Left" Width="315" Foreground="#FF646464" FontFamily="Calibri"/>
                 <Label x:Name="isMem" Content="M" HorizontalAlignment="Left" Margin="0,71,0,0" VerticalAlignment="Top" Width="100" Visibility="Hidden"/>
             </Grid>
