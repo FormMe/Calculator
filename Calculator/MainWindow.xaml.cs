@@ -34,25 +34,25 @@ namespace Calculator
             var tag = e.OriginalSource.ToString().Split(' ').ToList();
             if (tag.Count != 2) return;
 
+            ChangeMemoryStatus(tag[1]);
+
             Controler.DoCommand(tag[1]);
             preHistoryText.Content = Controler.preH;
             editableNumberText.Content = Controler.editable;
-
-
-
-
-            //if (tag[1] != "Преобразовать")
-            //{
-            //    NumberText.Text = res;
-            //    if (tag[1] == "Clear")
-            //        Result.Content = res;
-            //}
-            //else
-            //    Result.Content = res;
+            isMem.Content = "M = " + Controler.memN;
         }
 
-        private void MenuItemWithRadioButtons_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void ChangeMemoryStatus(string tag)
         {
+            switch (tag)
+            {
+                case "MS":
+                    isMem.Visibility = Visibility.Visible;
+                    break;
+                case "MC":
+                    isMem.Visibility = Visibility.Hidden;
+                    break;
+            }
         }
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)
@@ -89,6 +89,6 @@ namespace Calculator
         {
             Controler.Base = Convert.ToInt32(Slider.Value);
         }
-
+        
     }
 }

@@ -31,10 +31,10 @@ namespace Calculator
         private Editor editor;
         private Memory memory;
         private Proc proc;
-        private Number num;
 
         public string preH;
         public string editable => editor.Number;
+        public string memN => GetMem();
         public string operation;
         public int Base
         {
@@ -51,6 +51,11 @@ namespace Calculator
         private UT_10_p converter10P;
         private UT_p_10 converterP10;
 
+        private string GetMem()
+        {
+            return memory.Num?.ToString() ?? "";
+        }
+
         public Cntrl(Mode m)
         {
             mode = m;
@@ -62,19 +67,16 @@ namespace Calculator
                 case Mode.Real:
                     {
                         editor = new RealEditor();
-                        num = new Real(0);
                         break;
                     }
                 case Mode.Complex:
                     {
                         editor = new ComplexEditor();
-                        num = new Complex(0, 0);
                         break;
                     }
                 case Mode.Frac:
                     {
                         editor = new FracEditor();
-                        num = new Frac(0, 1);
                         break;
                     }
 
@@ -107,13 +109,24 @@ namespace Calculator
                         editor.AddDigit(char.Parse(command)); break;
 
                     case "MR":
-                        proc.r = memory.num; break;
+                        if (memory.Num != null)
+                            editor.Number = memory.Num.ToString();
+                        break;
                     case "MS":
-                        memory.num = proc.r; break;
+                        if (editor.Number != "")
+                            memory.Num = ToNumber(editor.Number);
+                        editor.Clear();
+                        break;
                     case "MC":
                         memory.Clear(); break;
-                    case "Mplus":
-                        memory.Add(proc.r); break;
+                    case "M+":
+                        if (editor.Number != "")
+                            memory.Add(ToNumber(editor.Number));
+                        break;
+                    case "M-":
+                        if (editor.Number != "")
+                            memory.Sub(ToNumber(editor.Number));
+                        break;
 
                     case "-":
                         SetNum();
@@ -176,7 +189,7 @@ namespace Calculator
             }
         }
 
-        private void SetNum( )
+        private void SetNum()
         {
             if (editor.Number == "") return;
 

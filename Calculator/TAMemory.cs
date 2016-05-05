@@ -9,23 +9,33 @@ namespace Calculator
 {
     class Memory
     {
-        public Number num { set; get; }
         private bool stat = false;
 
-        public Memory()
+        private Number _num;
+
+        public Number Num
         {
+            get { return _num; }
+            set
+            {
+                stat = true;
+                _num = value;
+            }
         }
-        
         public void Clear()
         {
-            num = null;
+            _num = null;
             stat = false;
         }
 
         public void Add(Number e)
         {
-            if (stat) num += e;
+            if (stat) _num += e;
         }
-        
+
+        public void Sub(Number e)
+        {
+            if (stat) _num -= e;
+        }
     }
 }
