@@ -1,22 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Convertor_p1_p2
+namespace Calculator
 {
     public abstract class Editor
     {
-        protected int _base;
+        protected int _base = 10;
         public string Number { get; set; }
 
         public int Base
         {
             set
             {
-                if (value >= 2 && value <= 16)
-                    _base = value;
+                if (value < 2 || value > 16) throw new Exception("Неверная система счисления");
+                var prevBase = _base;
+                _base = value;
+                Number = Cntrl.Convert(Number, prevBase, _base);
             }
             get { return _base; }
         }

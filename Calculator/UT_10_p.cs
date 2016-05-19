@@ -4,34 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Convertor_p1_p2
+namespace Calculator
 {
-    class UT_10_p
+    public static class Converter10p
     {
-        private int _base;
-        public int Base
+        private static int _base;
+        public static string DoTrasfer(double p1, int b)
         {
-            get { return _base; }
-            set
-            {
-                if (value >= 2 && value <= 16)
-                {
-                    _base = value;
-                }
-            }
-        }
-
-        public UT_10_p()
-        {
-            _base = 2;
-        }
-        public UT_10_p(int b)
-        {
-            Base = b;
-        }
-
-        public string DoTrasfer(double p1)
-        {
+            if (b < 2 || b > 16) throw new Exception("Неверная система счисления");
+            _base = b;
             var floor = Math.Floor(Math.Abs(p1));
             var fract = Math.Abs(p1) - floor;
             var result = Int10ToP(floor);
@@ -39,7 +20,7 @@ namespace Convertor_p1_p2
             return p1 < 0 ? "-" + result : result;
         }
 
-        private char IntToPChar(long n)
+        private static char IntToPChar(long n)
         {
             char k;
             if (n >= 10)
@@ -54,7 +35,7 @@ namespace Convertor_p1_p2
             return k;
         }
 
-        private string Int10ToP(double floor)
+        private static string Int10ToP(double floor)
         {
             var result = "";
             while (floor >= _base) //вычисление целой части в r системе
@@ -67,7 +48,7 @@ namespace Convertor_p1_p2
             return result;
         }
 
-        private string Frac10ToP(double fract)
+        private static string Frac10ToP(double fract)
         {
             var result = ".";
             fract *= _base;

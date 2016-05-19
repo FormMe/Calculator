@@ -33,10 +33,13 @@ namespace Calculator
         {
             var tag = e.OriginalSource.ToString().Split(' ').ToList();
             if (tag.Count != 2) return;
-
             ChangeMemoryStatus(tag[1]);
-
             Controler.DoCommand(tag[1]);
+            Print();
+        }
+
+        public void Print()
+        {
             preHistoryText.Content = Controler.preH;
             editableNumberText.Content = Controler.editable;
             isMem.Content = "M = " + Controler.memN;
@@ -88,7 +91,8 @@ namespace Calculator
         private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             Controler.Base = Convert.ToInt32(Slider.Value);
+            Print();
         }
-        
+
     }
 }

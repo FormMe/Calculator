@@ -13,6 +13,7 @@ namespace Calculator
         {
             return base.ToString();
         }
+        public int Base = 10;
 
         public abstract bool EqZero();
         public abstract Number Sqr();
@@ -51,19 +52,21 @@ namespace Calculator
     public class Real : Number
     {
         double num;
-        public Real(double n)
+        public Real(double n, int b)
         {
+            Base = b;
             num = n;
         }
-
-        public Real(string n)
+        public Real(string n, int b)
         {
-            double.TryParse(n, out num);
+            Base = b;
+            if (Base == 10) double.TryParse(n, out num);
+            num = ConverterP10.DoTrasfer(n, b);
         }
 
         public override string ToString()
         {
-            return num.ToString();
+            return Base == 10 ? num.ToString() : Converter10p.DoTrasfer(num, Base);
         }
 
         public override bool EqZero()
@@ -73,17 +76,17 @@ namespace Calculator
 
         public override Number Sqr()
         {
-            return new Real(num * num);
+            return new Real(num * num, Base);
         }
 
         public override Number Sqrt()
         {
-            return new Real(Math.Sqrt(num));
+            return new Real(Math.Sqrt(num), Base);
         }
 
         public override Number Rev()
         {
-            return new Real(1 / num);
+            return new Real(1 / num,Base);
         }
 
         protected override Number Plus(object obj)
@@ -93,7 +96,7 @@ namespace Calculator
             if (other == null)
                 throw new Exception("Plus error");
 
-            return new Real(num + other.num);
+            return new Real(num + other.num, Base);
         }
 
         protected override Number Minus(object obj)
@@ -103,7 +106,7 @@ namespace Calculator
             if (other == null)
                 throw new Exception("Minus error");
 
-            return new Real(num - other.num);
+            return new Real(num - other.num, Base);
         }
 
         protected override Number Mult(object obj)
@@ -113,7 +116,7 @@ namespace Calculator
             if (other == null)
                 throw new Exception("Multiply error");
 
-            return new Real(num * other.num);
+            return new Real(num * other.num, Base);
         }
 
         protected override Number Div(object obj)
@@ -123,12 +126,12 @@ namespace Calculator
             if (other == null)
                 throw new Exception("Multiply error");
 
-            return new Real(num / other.num);
+            return new Real(num / other.num, Base);
         }
 
         protected override Number Deny()
         {
-            return new Real(-num);
+            return new Real(-num, Base);
         }
 
         public override bool Equals(object obj)
@@ -152,18 +155,25 @@ namespace Calculator
             den = d;
         }
 
-        public Frac(string n)
+        public Frac(string n, int b)
         {
             var nn = n.Split('/').ToArray();
-            BigInteger.TryParse(nn[0], out num);
-            BigInteger.TryParse(nn[1], out den);
+            if (b == 10)
+            {
+                BigInteger.TryParse(nn[0], out num);
+                BigInteger.TryParse(nn[1], out den);
+            }
+            else
+            {
+                num = (BigInteger)ConverterP10.DoTrasfer(nn[0], b);
+                num = (BigInteger)ConverterP10.DoTrasfer(nn[1], b);
+            }
         }
-
         public override string ToString()
         {
             if (den == 1) return num.ToString();
             if (EqZero()) return "0";
-            return num + "/" + den;
+            return Base == 0 ? num + "/" + den : Converter10p.DoTrasfer((double)num, Base) + "/" + Converter10p.DoTrasfer((double)den, Base);
         }
 
         public override bool EqZero()
@@ -273,21 +283,25 @@ namespace Calculator
         Real Re;
         Real Im;
 
-        public Complex(double re, double im)
+        public Complex(double re, double im, int b)
         {
-            Im = new Real(im);
-            Re = new Real(re);
+            Base = b;
+            Im = new Real(im, Base);
+            Re = new Real(re, Base);
         }
 
-        public Complex(Real re, Real im)
+        private Complex(Real re, Real im, int b)
         {
+            Base = b;
             Im = im;
             Re = re;
         }
 
-        public Complex(string n)
+        public Complex(string n, int b)
         {
-
+            var nn = n.Split('/').ToArray();
+            Re = new Real(nn[0], b);
+            Im = new Real(nn[1], b);
         }
         public override string ToString()
         {
@@ -303,7 +317,7 @@ namespace Calculator
 
         public override Number Sqr()
         {
-            return new Complex((Real)(Re.Sqr() - Im.Sqr()), (Real)((new Real(2)) * Re * Im));
+            return new Complex((Real)(Re.Sqr() - Im.Sqr()), (Real)((new Real(2,Base)) * Re * Im), Base);
         }
 
         public override Number Sqrt()
@@ -314,7 +328,7 @@ namespace Calculator
         public override Number Rev()
         {
             var ab = Re.Sqr() + Im.Sqr();
-            return new Complex((Real)(Re / ab), (Real)(-Im / ab));
+            return new Complex((Real)(Re / ab), (Real)(-Im / ab), Base);
         }
 
         protected override Number Plus(object obj)
@@ -324,7 +338,7 @@ namespace Calculator
             if (other == null)
                 throw new Exception("Plus error");
 
-            return new Complex((Real)(Re + other.Re), (Real)(Im + other.Im));
+            return new Complex((Real)(Re + other.Re), (Real)(Im + other.Im), Base);
         }
 
         protected override Number Minus(object obj)
@@ -334,7 +348,7 @@ namespace Calculator
             if (other == null)
                 throw new Exception("Minus error");
 
-            return new Complex((Real)(Re - other.Re), (Real)(Im - other.Im));
+            return new Complex((Real)(Re - other.Re), (Real)(Im - other.Im), Base);
         }
 
         protected override Number Mult(object obj)
@@ -345,7 +359,7 @@ namespace Calculator
                 throw new Exception("Multiply error");
 
             return new Complex((Real)(Re * other.Re - Im * other.Im),
-                                (Real)(Im * other.Re + Re * other.Im));
+                                (Real)(Im * other.Re + Re * other.Im), Base);
         }
 
         protected override Number Div(object obj)
@@ -356,12 +370,12 @@ namespace Calculator
                 throw new Exception("Div error");
             var cd = other.Re.Sqr() + other.Im.Sqr();
             return new Complex((Real)((Re * other.Re + Im * other.Im) / cd),
-                                (Real)((Im * other.Re - Re * other.Im) / cd));
+                                (Real)((Im * other.Re - Re * other.Im) / cd), Base);
         }
 
         protected override Number Deny()
         {
-            return new Complex((Real)(-Re), (Real)(-Im));
+            return new Complex((Real)(-Re), (Real)(-Im), Base);
         }
 
         public override bool Equals(object obj)

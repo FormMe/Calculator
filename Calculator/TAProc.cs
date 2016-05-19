@@ -30,6 +30,7 @@ namespace Calculator
         public Operation op;
         public Function func;
 
+        public bool isRightFunc = false;
 
         public Proc()
         {
@@ -60,6 +61,7 @@ namespace Calculator
                         break;
                 }
                 r = null;
+                op = Operation.None;
             }
             catch (Exception ex)
             {
@@ -76,15 +78,19 @@ namespace Calculator
                     case Function.None:
                         break;
                     case Function.Rev:
-                        l = l.Rev();
+                        if (r != null) r = r.Rev();
+                        else l = l.Rev();
                         break;
                     case Function.Sqr:
-                        l = l.Sqr();
+                        if (r != null) r = r.Sqr();
+                        else l = l.Rev();
                         break;
                     case Function.Sqrt:
-                        l = l.Sqrt();
+                        if (r != null) r = r.Sqrt();
+                        else l = l.Rev();
                         break;
                 }
+                func = Function.None;
             }
             catch (Exception ex)
             {

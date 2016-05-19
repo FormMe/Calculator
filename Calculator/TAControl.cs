@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Globalization;
 using System.IO.Packaging;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using Convertor_p1_p2;
 
 namespace Calculator
 {
@@ -17,14 +17,6 @@ namespace Calculator
         Frac
     };
 
-    enum Stat
-    {
-        IsLeft,
-        IsOp,
-        IsRight,
-        OpBegin,
-        OpDone
-    }
     class Cntrl
     {
         public History history;
@@ -35,21 +27,26 @@ namespace Calculator
         public string preH = "";
         public string editable => editor.Number;
         public string memN => GetMem();
-        public string operation;
         public int Base
         {
             set
             {
                 editor.Base = value;
+                if (proc.r != null) proc.r.Base = value;
+                if (proc.l != null) proc.l.Base = value;
+                if (memory.Num != null) memory.Num.Base = value;
             }
-            get { return editor.Base; }
+            private get { return editor.Base; }
         }
 
         public Mode mode;
-        public Stat status;
 
-        private UT_10_p converter10P;
-        private UT_p_10 converterP10;
+        string[] operations =
+        {
+            "Sqr",
+            "1/x",
+            "Sqrt"
+        };
 
         private bool isNewCalc = true;
 
@@ -196,11 +193,9 @@ namespace Calculator
 
         private void ClearForNewCalc()
         {
-            if (isNewCalc)
-            {
-                editor.Clear();
-                isNewCalc = false;
-            }
+            if (!isNewCalc) return;
+            editor.Clear();
+            isNewCalc = false;
         }
 
         private void SetNum(string command)
@@ -211,23 +206,32 @@ namespace Calculator
                 proc.l = ToNumber(editor.Number);
             else
             {
-                if (!isNewCalc)
+                if (!isNewCalc || operations.Contains(command))
                     proc.r = ToNumber(editor.Number);
             }
-
-            if (command == "Sqr" || command == "Sqrt" || command == "1/x")
-            {
-                preH = command == "1/x" ? "Rev" : command;
-                preH += "(" + proc.l + ")";
-            }
-            else
-                preH = preH = proc.l + " " + command;
+            MakePreH(command);
         }
         private void SetResult(string command)
         {
-            preH = preH = proc.l + " " + command;
-            editor.Number = proc.l.ToString();
+            if (proc.r == null) MakePreH(command);
+            var num = proc.r ?? proc.l;
+            editor.Number = num.ToString();
             isNewCalc = true;
+        }
+
+        private void MakePreH(string command)
+        {
+            var tmp = "";
+            if (operations.Contains(command))
+            {
+                tmp = command == "1/x" ? "Rev" : command;
+                var num = proc.r ?? proc.l;
+                tmp += "(" + num + ")";
+                preH = preH.Remove(preH.LastIndexOf(' '));
+            }
+            else
+                preH = proc.l + " " + command + " ";
+            preH += tmp;
         }
 
         private Number ToNumber(string n)
@@ -235,24 +239,25 @@ namespace Calculator
             switch (mode)
             {
                 case Mode.Real:
-                    return new Real(n);
+                    return new Real(n, Base);
                 case Mode.Complex:
-                    return new Complex(n);
+                    return new Complex(n, Base);
                 case Mode.Frac:
-                    return new Frac(n);
+                    return new Frac(n, Base);
                 default:
                     throw new Exception("Ошибка приведения типа");
             }
         }
 
-        private string Convert(string num, int b)
+        public static string Convert(string number, int p1, int p2)
         {
-            if (Base == b) return num;
-            if (Base == 10)
-                return converter10P.DoTrasfer(double.Parse(editor.Number.Replace('.', ',')));
-
-            return b == 10 ? converterP10.DoTrasfer(editor.Number).ToString() : converter10P.DoTrasfer(converterP10.DoTrasfer(editor.Number));
-
+            if (string.IsNullOrEmpty(number) || number == "0" ) return "0";
+            if (p1 == p2) return number;
+            return p1 == 10
+                ? Converter10p.DoTrasfer(double.Parse(number.Replace('.', ',')), p2)
+                : (p2 == 10
+                    ? ConverterP10.DoTrasfer(number, p1).ToString(CultureInfo.InvariantCulture)
+                    : Converter10p.DoTrasfer(ConverterP10.DoTrasfer(number, p1), p2));
         }
     }
 }

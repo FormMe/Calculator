@@ -5,34 +5,16 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace Convertor_p1_p2
+namespace Calculator
 {
-    public class UT_p_10
+    public static class ConverterP10
     {
-        private int _base;
-        public int Base
-        {
-            get { return _base; }
-            set
-            {
-                if (value >= 2 && value <= 16)
-                {
-                    _base = value;
-                }
-            }
-        }
+        private static int _base;
 
-        public UT_p_10()
+        public static double DoTrasfer(string p1, int b)
         {
-            _base = 2;
-        }
-        public UT_p_10(int b)
-        {
-            Base = b;
-        }
-
-        public double DoTrasfer(string p1)
-        {
+            if (b < 2 || b > 16) throw new Exception("Неверная система счисления");
+            _base = b;
             int sign = Convert.ToInt32(p1[0] == '-');
             var dot_ind = p1.IndexOf('.');
             double result = 0;
@@ -46,12 +28,12 @@ namespace Convertor_p1_p2
             return sign == 1 ? -1 * result : result;
         }
 
-        private long PCharToInt(char a)
+        private static long PCharToInt(char a)
         {
             return (a >= 'A') ? 10 + ((int)a - (int)'A') : int.Parse(a.ToString());
         }
 
-        private double PIntTo10(string floor) 
+        private static double PIntTo10(string floor) 
         {
             double dec = 0;
             int j, k;
@@ -60,7 +42,7 @@ namespace Convertor_p1_p2
             return dec;
         }
 
-        private double PFracTo10(string fract)
+        private static double PFracTo10(string fract)
         {
             double DEC = 0;
             int j, k;
