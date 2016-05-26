@@ -50,7 +50,7 @@ namespace Calculator
 
         private static string Frac10ToP(double fract)
         {
-            var result = ".";
+            var result = Cntrl.dot.ToString();
             fract *= _base;
             int i = 0;
             while (Math.Abs(fract) > 1e-11 && i++ < 40)

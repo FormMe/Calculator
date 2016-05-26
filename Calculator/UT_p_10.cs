@@ -16,7 +16,7 @@ namespace Calculator
             if (b < 2 || b > 16) throw new Exception("Неверная система счисления");
             _base = b;
             int sign = Convert.ToInt32(p1[0] == '-');
-            var dot_ind = p1.IndexOf('.');
+            var dot_ind = p1.IndexOf(Cntrl.dot);
             double result = 0;
             if (dot_ind == -1) result = PIntTo10(p1);
             else

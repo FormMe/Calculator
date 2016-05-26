@@ -26,10 +26,14 @@ namespace Calculator
 
         public virtual void Sign()
         {
-            if (Number[0] == '-')
+            if (!string.IsNullOrEmpty(Number) && Number[0] == '-')
                 Number = Number.Substring(1, Number.Length - 1);
             else
+            {
+                if (string.IsNullOrEmpty(Number))
+                    Number = "0";
                 Number = "-" + Number;
+            }
         }
         public void Clear()
         {
@@ -49,20 +53,20 @@ namespace Calculator
     {
         public RealEditor()
         {
-            Number = "0";
+            Number = "";
         }
         public override void Separate()
         {
-            if (Number.Contains('.')) return;
-            if (Number.Length == 0) Number += "0.";
-            else Number += ".";
+            if (Number.Contains(Cntrl.dot)) return;
+            if (Number.Length == 0) Number += "0" + Cntrl.dot;
+            else Number += Cntrl.dot.ToString();
         }
 
         public override void BackSpace()
         {
-            if (Number.Length == 1) Number = "0";
-            else
-                if (Number[Number.Length - 1] == '0' && Number[Number.Length - 2] == '.')
+            if (string.IsNullOrEmpty(Number)) return;
+
+            if (Number[Number.Length - 1] == '0' && Number[Number.Length - 2] == Cntrl.dot)
                 Number = Number.Substring(0, Number.Length - 2);
             else
                 Number = Number.Substring(0, Number.Length - 1);
@@ -101,14 +105,13 @@ namespace Calculator
         public override void Separate()
         {
             if (Number.Contains('/')) return;
-            if (Number.Length == 0) Number += "0.";
+            if (Number.Length == 0) Number += "0/";
             else Number += "/";
         }
         public override void BackSpace()
         {
-            if (Number.Length == 1) Number = "0";
-            else
-                if (Number[Number.Length - 1] == '0' && Number[Number.Length - 2] == '/')
+            if (string.IsNullOrEmpty(Number)) return;
+            if (Number[Number.Length - 1] == '0' && Number[Number.Length - 2] == '/')
                 Number = Number.Substring(0, Number.Length - 2);
             else
                 Number = Number.Substring(0, Number.Length - 1);

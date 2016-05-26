@@ -61,7 +61,7 @@ namespace Calculator
         {
             Base = b;
             if (Base == 10) double.TryParse(n, out num);
-            num = ConverterP10.DoTrasfer(n, b);
+            else num = ConverterP10.DoTrasfer(n, b);
         }
 
         public override string ToString()
@@ -76,6 +76,7 @@ namespace Calculator
 
         public override Number Sqr()
         {
+            if(num < 0) throw new Exception("Деление на ноль");
             return new Real(num * num, Base);
         }
 
@@ -183,6 +184,7 @@ namespace Calculator
 
         public override Number Sqr()
         {
+            if (num < 0) throw new Exception("Деление на ноль");
             return new Frac(num * num, den * den).Reduce();
         }
 

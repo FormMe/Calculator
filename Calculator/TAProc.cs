@@ -9,11 +9,11 @@ namespace Calculator
 {
     enum Operation
     {
-        None,
-        Add,
-        Sub,
-        Mult,
-        Div
+        None = ' ',
+        Add = '+',
+        Sub = '-',
+        Mult = '*',
+        Div = '/'
     };
     enum Function
     {
@@ -22,6 +22,7 @@ namespace Calculator
         Sqr,
         Sqrt
     };
+    
     class Proc
     {
         public Number l { get; set; }
@@ -83,14 +84,14 @@ namespace Calculator
                         break;
                     case Function.Sqr:
                         if (r != null) r = r.Sqr();
-                        else l = l.Rev();
+                        else l = l.Sqr();
                         break;
                     case Function.Sqrt:
                         if (r != null) r = r.Sqrt();
-                        else l = l.Rev();
+                        else l = l.Sqrt();
                         break;
                 }
-                func = Function.None;
+                
             }
             catch (Exception ex)
             {

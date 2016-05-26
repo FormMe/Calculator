@@ -24,7 +24,7 @@ namespace Calculator
         private Memory memory;
         private Proc proc;
 
-        public string preH = "";
+        public string preH => MakePreH();
         public string editable => editor.Number;
         public string memN => GetMem();
         public int Base
@@ -35,20 +35,27 @@ namespace Calculator
                 if (proc.r != null) proc.r.Base = value;
                 if (proc.l != null) proc.l.Base = value;
                 if (memory.Num != null) memory.Num.Base = value;
+                if (prevNum != null) prevNum.Base = value;
             }
             private get { return editor.Base; }
         }
 
+        private Number prevNum;
+        private Operation prevOp;
         public Mode mode;
 
         string[] operations =
         {
             "Sqr",
             "1/x",
+            "Rev",
             "Sqrt"
         };
 
+        public static char dot = ',';
+
         private bool isNewCalc = true;
+        private bool isTimeToEqual = false;
 
         private string GetMem()
         {
@@ -66,16 +73,20 @@ namespace Calculator
                 case Mode.Real:
                     {
                         editor = new RealEditor();
+                        prevNum = new Real(0, Base);
                         break;
                     }
                 case Mode.Complex:
                     {
                         editor = new ComplexEditor();
+                        prevNum = new Complex(0, 0, Base);
                         break;
                     }
                 case Mode.Frac:
                     {
                         editor = new FracEditor();
+                        //кривой конструктор
+                        prevNum = new Frac(0, Base);
                         break;
                     }
 
@@ -88,7 +99,7 @@ namespace Calculator
             {
                 switch (command)
                 {
-                    case ".":
+                    case ",":
                     case "Decimal":
                         ClearForNewCalc();
                         editor.Separate();
@@ -106,7 +117,6 @@ namespace Calculator
                     case "C":
                         proc.Reset();
                         editor.Clear();
-                        preH = "";
                         break;
                     default:
                         ClearForNewCalc();
@@ -136,52 +146,49 @@ namespace Calculator
                     case "-":
                         SetNum(command);
                         proc.RunOperation();
-                        proc.op = Operation.Sub;
-                        SetResult(command);
+                        proc.op = prevOp = Operation.Sub;
+                        SetResult();
                         break;
                     case "+":
                         SetNum(command);
                         proc.RunOperation();
-                        proc.op = Operation.Add;
-                        SetResult(command);
+                        proc.op = prevOp = Operation.Add;
+                        SetResult();
                         break;
                     case "*":
                         SetNum(command);
                         proc.RunOperation();
-                        proc.op = Operation.Mult;
-                        SetResult(command);
+                        proc.op = prevOp = Operation.Mult;
+                        SetResult();
                         break;
                     case "/":
                         SetNum(command);
                         proc.RunOperation();
-                        proc.op = Operation.Div;
-                        SetResult(command);
+                        proc.op = prevOp = Operation.Div;
+                        SetResult();
                         break;
                     case "Sqr":
                         SetNum(command);
                         proc.func = Function.Sqr;
                         proc.RunFunction();
-                        SetResult(command);
+                        SetResult();
                         break;
                     case "Sqrt":
                         SetNum(command);
                         proc.func = Function.Sqrt;
                         proc.RunFunction();
-                        SetResult(command);
+                        SetResult();
                         break;
                     case "1/x":
                         SetNum(command);
                         proc.func = Function.Rev;
                         proc.RunFunction();
-                        SetResult(command);
+                        SetResult();
                         break;
                     case "=":
                         SetNum(command);
-                        proc.RunFunction();
                         proc.RunOperation();
                         editor.Number = proc.l.ToString();
-                        preH = "";
-                        proc.Reset();
                         break;
                 }
             }
@@ -200,38 +207,43 @@ namespace Calculator
 
         private void SetNum(string command)
         {
+            proc.func = Function.None;
             if (editor.Number == "") return;
 
             if (proc.l == null)
                 proc.l = ToNumber(editor.Number);
             else
             {
-                if (!isNewCalc || operations.Contains(command))
-                    proc.r = ToNumber(editor.Number);
+                var tmpNum = ToNumber(editor.Number);
+                if (command == "=")
+                {
+                    if (!isTimeToEqual || prevNum == null) prevNum = tmpNum;
+                    proc.op = prevOp;
+                    proc.r = prevNum;
+                    isTimeToEqual = true;
+                    return;
+                }
+                isTimeToEqual = false;
+                prevNum = null;
+                if (isNewCalc && !operations.Contains(command)) return;
+                prevNum = proc.r ?? tmpNum;
+                proc.r = tmpNum;
             }
-            MakePreH(command);
         }
-        private void SetResult(string command)
+        private void SetResult()
         {
-            if (proc.r == null) MakePreH(command);
             var num = proc.r ?? proc.l;
             editor.Number = num.ToString();
             isNewCalc = true;
         }
 
-        private void MakePreH(string command)
+        private string MakePreH()
         {
-            var tmp = "";
-            if (operations.Contains(command))
-            {
-                tmp = command == "1/x" ? "Rev" : command;
-                var num = proc.r ?? proc.l;
-                tmp += "(" + num + ")";
-                preH = preH.Remove(preH.LastIndexOf(' '));
-            }
-            else
-                preH = proc.l + " " + command + " ";
-            preH += tmp;
+            if (proc.l == null || proc.l.EqZero() || isTimeToEqual) return "";
+            var upString = proc.l + " " + OperationToString(proc.op) + " ";
+            var command = proc.func.ToString();
+            if (!operations.Contains(command)) return upString;
+            return upString + command + "(" + prevNum + ")";
         }
 
         private Number ToNumber(string n)
@@ -251,13 +263,25 @@ namespace Calculator
 
         public static string Convert(string number, int p1, int p2)
         {
-            if (string.IsNullOrEmpty(number) || number == "0" ) return "0";
+            if (string.IsNullOrEmpty(number) || number == "0") return "0";
             if (p1 == p2) return number;
             return p1 == 10
                 ? Converter10p.DoTrasfer(double.Parse(number.Replace('.', ',')), p2)
                 : (p2 == 10
                     ? ConverterP10.DoTrasfer(number, p1).ToString(CultureInfo.InvariantCulture)
                     : Converter10p.DoTrasfer(ConverterP10.DoTrasfer(number, p1), p2));
+        }
+
+        public static string OperationToString(Operation op)
+        {
+            switch (op)
+            {
+                case Operation.Add: return "+";
+                case Operation.Sub: return "-";
+                case Operation.Div: return "/";
+                case Operation.Mult: return "*";
+                default: return "";
+            }
         }
     }
 }
