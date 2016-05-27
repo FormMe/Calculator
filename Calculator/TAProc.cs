@@ -13,7 +13,7 @@ namespace Calculator
         Add = '+',
         Sub = '-',
         Mult = '*',
-        Div = '/'
+        Div = '÷'
     };
     enum Function
     {

@@ -93,7 +93,7 @@ namespace Calculator
 
         public override Number Rev()
         {
-            return new Real(1 / num,Base);
+            return new Real(1 / num, Base);
         }
 
         protected override Number Plus(object obj)
@@ -164,22 +164,24 @@ namespace Calculator
 
         public Frac(string n, int b)
         {
-            var nn = n.Split('/').ToArray();
+            var splitedNumber = n.Split('/').ToArray();
             if (b == 10)
             {
-                BigInteger.TryParse(nn[0], out num);
-                BigInteger.TryParse(nn[1], out den);
+                BigInteger.TryParse(splitedNumber[0], out num);
+                if (splitedNumber.Length == 1 ||
+                    string.IsNullOrEmpty(splitedNumber[1]) ) den = 1;
+                else BigInteger.TryParse(splitedNumber[1], out den);
             }
             else
             {
-                num = (BigInteger)ConverterP10.DoTrasfer(nn[0], b);
-                num = (BigInteger)ConverterP10.DoTrasfer(nn[1], b);
+                num = (BigInteger)ConverterP10.DoTrasfer(splitedNumber[0], b);
+                if (splitedNumber.Length == 1 ||
+                    string.IsNullOrEmpty(splitedNumber[1])) den = 1;
+                else den = (BigInteger)ConverterP10.DoTrasfer(splitedNumber[1], b);
             }
         }
         public override string ToString()
         {
-            if (den == 1) return num.ToString();
-            if (EqZero()) return "0";
             return Base == 0 ? num + "/" + den : Converter10p.DoTrasfer((double)num, Base) + "/" + Converter10p.DoTrasfer((double)den, Base);
         }
 
@@ -197,14 +199,16 @@ namespace Calculator
             return new Frac(den, num).Reduce();
         }
 
+        private bool isNan = false;
         public override bool IsNaN()
         {
-            return false;
+            return isNan;
         }
 
 
         public override Number Rev()
         {
+            if (num == 0) isNan = true;
             return new Frac(den, num).Reduce();
         }
 
@@ -334,7 +338,7 @@ namespace Calculator
 
         public override Number Sqr()
         {
-            return new Complex((Real)(Re.Sqr() - Im.Sqr()), (Real)((new Real(2,Base)) * Re * Im), Base);
+            return new Complex((Real)(Re.Sqr() - Im.Sqr()), (Real)((new Real(2, Base)) * Re * Im), Base);
         }
 
         public override Number Sqrt()

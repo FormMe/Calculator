@@ -25,9 +25,12 @@ namespace Calculator
         {
             InitializeComponent();
             RealMode.IsChecked = true;
+            Slider.Value = 10;
         }
 
         Cntrl Controler = new Cntrl(Mode.Real);
+
+        bool[] activeButtons = new bool[16];
 
         private void ButtonClick(object sender, RoutedEventArgs e)
         {
@@ -42,7 +45,7 @@ namespace Calculator
         {
             preHistoryText.Content = Controler.preH;
             editableNumberText.Content = Controler.editable;
-            if(!string.IsNullOrEmpty(Controler.memN)) isMem.Content = "M = " + Controler.memN;
+            if (!string.IsNullOrEmpty(Controler.memN)) isMem.Content = "M = " + Controler.memN;
         }
 
         private void ChangeMemoryStatus(string tag)
@@ -71,28 +74,53 @@ namespace Calculator
                     ComplexMode.IsChecked = false;
                     FracMode.IsChecked = false;
                     Controler = new Cntrl(Mode.Real);
-
+                    Dot.Content = ",";
+                    Sqrt.Visibility = Visibility.Visible;
                     break;
                 case "Простые дроби":
                     ComplexMode.IsChecked = false;
                     RealMode.IsChecked = false;
                     Controler = new Cntrl(Mode.Frac);
-
+                    Sqrt.Visibility = Visibility.Hidden;
+                    Dot.Content = "/";
                     break;
                 case "Комплексные числа":
                     RealMode.IsChecked = false;
                     FracMode.IsChecked = false;
                     Controler = new Cntrl(Mode.Complex);
-
+                    Sqrt.Visibility = Visibility.Hidden;
                     break;
-
-
             }
+            Print();
         }
 
         private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             Controler.Base = Convert.ToInt32(Slider.Value);
+
+            activeButtons.Initialize();
+
+            for (var i = 0; i < activeButtons.Length; ++i)
+                activeButtons[i] = false;
+            for (var i = Convert.ToInt32(Slider.Value); i < activeButtons.Length; ++i)
+                activeButtons[i] = true;
+            Null.IsEnabled = !activeButtons[0];
+            One.IsEnabled = !activeButtons[1];
+            Two.IsEnabled = !activeButtons[2];
+            Three.IsEnabled = !activeButtons[3];
+            Four.IsEnabled = !activeButtons[4];
+            Five.IsEnabled = !activeButtons[5];
+            Six.IsEnabled = !activeButtons[6];
+            Seven.IsEnabled = !activeButtons[7];
+            Eight.IsEnabled = !activeButtons[8];
+            Nine.IsEnabled = !activeButtons[9];
+            A.IsEnabled = !activeButtons[10];
+            B.IsEnabled = !activeButtons[11];
+            C.IsEnabled = !activeButtons[12];
+            D.IsEnabled = !activeButtons[13];
+            E.IsEnabled = !activeButtons[14];
+            F.IsEnabled = !activeButtons[15];
+
             Print();
         }
 

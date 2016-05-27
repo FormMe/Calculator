@@ -30,9 +30,25 @@
 
         <Border BorderBrush="#FF34407A" Background="#FFA3D6E6" BorderThickness="1" HorizontalAlignment="Left" Height="214" Margin="10,135,0,0" VerticalAlignment="Top" Width="335">
             <Grid HorizontalAlignment="Left" Height="214" VerticalAlignment="Top" Width="335" Margin="-1">
+
                 <Button x:Name="Null" Content="0" HorizontalAlignment="Left" Margin="59,178,0,0" VerticalAlignment="Top" Width="48" Height="24" RenderTransformOrigin="0.5,0.5" FontSize="15" Background="#FFA3D6E6" Foreground="Black" BorderBrush="#FFA3D6E6"/>
                 <Button x:Name="One" Content="1" HorizontalAlignment="Left" Margin="59,150,0,0" VerticalAlignment="Top" Width="48" Height="24" RenderTransformOrigin="0.5,0.5" FontSize="15" Background="#FFA3D6E6" Foreground="Black" BorderBrush="#FFA3D6E6"/>
-                <Button x:Name="Two" Content="2" HorizontalAlignment="Left" Margin="110,150,0,0" VerticalAlignment="Top" Width="48" Height="24" RenderTransformOrigin="0.5,0.5" FontSize="15" Background="#FFA3D6E6" Foreground="Black" BorderBrush="#FFA3D6E6"/>
+
+                <StackPanel>
+                    <StackPanel.Resources>
+                        <Style TargetType="{x:Type Button}">
+                            <Setter Property="Foreground" Value="Red"/>
+                            <Setter Property="IsEnabled" Value="True"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsEnabled" Value="false">
+                                    <Setter Property="Foreground" Value="#FF34407A"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </StackPanel.Resources>
+                    <Button x:Name="Two" Content="2" HorizontalAlignment="Left" Margin="110,150,0,0" VerticalAlignment="Top" Width="48" Height="24" RenderTransformOrigin="0.5,0.5" FontSize="15" Background="#FFA3D6E6" Foreground="Black" BorderBrush="#FFA3D6E6"/>
+
+                </StackPanel>
                 <Button x:Name="Three" Content="3" HorizontalAlignment="Left" Margin="163,150,0,0" VerticalAlignment="Top" Width="48" Height="24" RenderTransformOrigin="1.531,0.833" FontSize="15" Background="#FFA3D6E6" Foreground="Black" BorderBrush="#FFA3D6E6"/>
                 <Button x:Name="Four" Content="4" HorizontalAlignment="Left" Margin="59,122,0,0" VerticalAlignment="Top" Width="48" Height="24" RenderTransformOrigin="0.5,0.5" FontSize="15" Background="#FFA3D6E6" Foreground="Black" BorderBrush="#FFA3D6E6"/>
                 <Button x:Name="Five" Content="5" HorizontalAlignment="Left" Margin="110,122,0,0" VerticalAlignment="Top" Width="48" Height="24" RenderTransformOrigin="0.5,0.5" FontSize="15" Background="#FFA3D6E6" Foreground="Black" BorderBrush="#FFA3D6E6"/>
@@ -47,10 +63,10 @@
                 <Button  x:Name="E" Content="E" HorizontalAlignment="Left" Margin="110,36,0,0" VerticalAlignment="Top" Width="48" Height="24" RenderTransformOrigin="0.62,0.514" FontSize="15"  Background="#FFA3D6E6" Foreground="Black" BorderBrush="#FFA3D6E6"/>
                 <Button  x:Name="F" Content="F" HorizontalAlignment="Left" Margin="164,36,0,0" VerticalAlignment="Top" Width="48" Height="24" RenderTransformOrigin="0.5,0.5" FontSize="15"  Background="#FFA3D6E6" Foreground="Black" BorderBrush="#FFA3D6E6"/>
                 <Button x:Name="Dot" Content="," HorizontalAlignment="Left" Margin="163,178,0,0" VerticalAlignment="Top" Width="48" Height="24" RenderTransformOrigin="0.5,0.5" FontSize="15" Background="#FFA3D6E6" Foreground="Black" BorderBrush="#FFA3D6E6"/>
-                <Button x:Name="Minus" Content="+/-" HorizontalAlignment="Left" Margin="110,178,0,0" VerticalAlignment="Top" Width="48" Height="24" RenderTransformOrigin="0.5,0.5" FontSize="15" Background="#FFA3D6E6" Foreground="Black" BorderBrush="#FFA3D6E6" />
+                <Button x:Name="Minus" Content="±" HorizontalAlignment="Left" Margin="110,178,0,0" VerticalAlignment="Top" Width="48" Height="24" RenderTransformOrigin="0.5,0.5" FontSize="15" Background="#FFA3D6E6" Foreground="Black" BorderBrush="#FFA3D6E6" />
                 <Button x:Name="Equall" Content="=" HorizontalAlignment="Left" Margin="214,150,0,0" VerticalAlignment="Top" Width="48" Height="52" RenderTransformOrigin="0.5,0.5" FontSize="15"  Background="#FFA3D6E6" Foreground="#FFF00000" BorderBrush="#FFA3D6E6" />
-                <Button x:Name="Clear"  Content="C" HorizontalAlignment="Left" Margin="214,7,0,0" VerticalAlignment="Top" Width="48" Height="24" RenderTransformOrigin="0.5,0.5" FontSize="15"  Background="#FFA3D6E6" Foreground="#FFF00000" BorderBrush="#FFA3D6E6" />
-                <Button x:Name="CE"  Content="CE" HorizontalAlignment="Left" Margin="164,7,0,0" VerticalAlignment="Top" Width="48" Height="24" RenderTransformOrigin="1.476,0.681" FontSize="15"    Background="#FFA3D6E6" Foreground="#FFF00000" BorderBrush="#FFA3D6E6" />
+                <Button x:Name="Clear"  Content="Clear" HorizontalAlignment="Left" Margin="164,7,0,0" VerticalAlignment="Top" Width="48" Height="24" RenderTransformOrigin="0.5,0.5" FontSize="15"  Background="#FFA3D6E6" Foreground="#FFF00000" BorderBrush="#FFA3D6E6" />
+                <Button x:Name="CE"  Content="CE" HorizontalAlignment="Left" Margin="214,7,0,0" VerticalAlignment="Top" Width="48" Height="24" RenderTransformOrigin="1.476,0.681" FontSize="15"    Background="#FFA3D6E6" Foreground="#FFF00000" BorderBrush="#FFA3D6E6" />
                 <Button x:Name="BS"  Content="BackSpace" HorizontalAlignment="Left" Margin="59,7,0,0" VerticalAlignment="Top" Width="101" Height="24" RenderTransformOrigin="0.5,0.5" FontSize="15"    Background="#FFA3D6E6" Foreground="#FFF00000" BorderBrush="#FFA3D6E6" />
                 <Button x:Name="Mplus" Content="M+" HorizontalAlignment="Left" Margin="9,122,0,0" VerticalAlignment="Top" Width="48" Height="24" RenderTransformOrigin="0.5,0.5" FontSize="15"     Background="#FFA3D6E6" Foreground="#FFF00000" BorderBrush="#FFA3D6E6" />
                 <Button x:Name="MS" Content="MS" HorizontalAlignment="Left" Margin="9,92,0,0" VerticalAlignment="Top" Width="48" Height="24" RenderTransformOrigin="0.5,0.5" FontSize="15" Background="#FFA3D6E6" Foreground="#FFF00000" BorderBrush="#FFA3D6E6"/>
@@ -58,7 +74,7 @@
                 <Button x:Name="MC" Content="MC" HorizontalAlignment="Left" Margin="9,36,0,0" VerticalAlignment="Top" Width="48" Height="24" RenderTransformOrigin="0.5,0.5" FontSize="15" Background="#FFA3D6E6" Foreground="#FFF00000" BorderBrush="#FFA3D6E6"/>
                 <Button x:Name="Sub" Content="-" HorizontalAlignment="Left" Margin="214,94,0,0" VerticalAlignment="Top" Width="48" Height="24" RenderTransformOrigin="1.531,0.833" FontSize="15"  Background="#FFA3D6E6" Foreground="#FFF00000" BorderBrush="#FFA3D6E6"/>
                 <Button x:Name="Mult" Content="*" HorizontalAlignment="Left" Margin="214,65,0,0" VerticalAlignment="Top" Width="48" Height="24" RenderTransformOrigin="1.531,0.833" FontSize="15" Background="#FFA3D6E6" Foreground="#FFF00000" BorderBrush="#FFA3D6E6"/>
-                <Button x:Name="Div" Content="/" HorizontalAlignment="Left" Margin="214,36,0,0" VerticalAlignment="Top" Width="48" Height="24" RenderTransformOrigin="1.531,0.833" FontSize="15"  Background="#FFA3D6E6" Foreground="#FFF00000" BorderBrush="#FFA3D6E6"/>
+                <Button x:Name="Div" Content="÷" HorizontalAlignment="Left" Margin="214,36,0,0" VerticalAlignment="Top" Width="48" Height="24" RenderTransformOrigin="1.531,0.833" FontSize="15"  Background="#FFA3D6E6" Foreground="#FFF00000" BorderBrush="#FFA3D6E6"/>
                 <Button x:Name="Plus" Content="+" HorizontalAlignment="Left" Margin="214,122,0,0" VerticalAlignment="Top" Width="48" Height="24" RenderTransformOrigin="0.5,0.5" FontSize="15"      Background="#FFA3D6E6" Foreground="#FFF00000" BorderBrush="#FFA3D6E6" />
                 <Button x:Name="Rev" Content="1/x" HorizontalAlignment="Left" Margin="265,36,0,0" VerticalAlignment="Top" Width="50" Height="24" RenderTransformOrigin="1.531,0.833" FontSize="15" Background="#FFA3D6E6" Foreground="#FFF00000" BorderBrush="#FFA3D6E6"/>
                 <Button x:Name="Sqr" Content="Sqr" HorizontalAlignment="Left" Margin="265,65,0,0" VerticalAlignment="Top" Width="50" Height="24" RenderTransformOrigin="1.531,0.833" FontSize="15" Background="#FFA3D6E6" Foreground="#FFF00000" BorderBrush="#FFA3D6E6" />
@@ -66,6 +82,7 @@
                 <Button x:Name="Sqrt" Content="Sqrt" HorizontalAlignment="Left" Margin="265,94,0,0" VerticalAlignment="Top" Width="50" Height="24" RenderTransformOrigin="1.531,0.833" FontSize="15" Background="#FFA3D6E6" Foreground="#FFF00000" BorderBrush="#FFA3D6E6" />
             </Grid>
         </Border>
+
 
         <Border BorderBrush="#FF34407A" Background="#FFA3D6E6" BorderThickness="1" HorizontalAlignment="Left" Height="49" Margin="10,354,0,0" VerticalAlignment="Top" Width="335">
             <Grid HorizontalAlignment="Left" Height="45" Margin="9,9,-122,0" VerticalAlignment="Top" Width="345">

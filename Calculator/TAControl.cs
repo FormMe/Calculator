@@ -103,11 +103,11 @@ namespace Calculator
                 {
                     case ",":
                     case "Decimal":
+                    case "/":
                         ClearForNewCalc();
                         editor.Separate();
                         break;
-                    case "+/-":
-                        //  ClearForNewCalc();
+                    case "±":
                         editor.Sign();
                         break;
                     case "CE":
@@ -117,7 +117,7 @@ namespace Calculator
                     case "BackSpace":
                     case "Back":
                         editor.BackSpace(); break;
-                    case "C":
+                    case "Clear":
                         ClearForNewCalc();
                         proc.Reset();
                         editor.Clear();
@@ -183,7 +183,7 @@ namespace Calculator
                         proc.op = prevOp = Operation.Mult;
                         SetResult();
                         break;
-                    case "/":
+                    case "÷":
                         SetNum(command);
                         proc.RunOperation();
                         proc.op = prevOp = Operation.Div;
@@ -277,7 +277,7 @@ namespace Calculator
 
         private string MakePreH()
         {
-            if (proc?.l == null || proc.l.EqZero() || isTimeToEqual) return "";
+            if (proc?.l == null || isTimeToEqual) return "";
             var command = proc.func.ToString();
 
             var isContains = operations.Contains(command);
@@ -293,6 +293,7 @@ namespace Calculator
 
         private string GetNum()
         {
+            //рев для дробей не робит. деление на ноль. сделать нан
             if (isNewCalc && proc.r != null && proc.r.IsNaN())
             {
                 proc.r = null;
