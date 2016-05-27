@@ -164,6 +164,12 @@ namespace Calculator
 
         public Frac(string n, int b)
         {
+            if (string.IsNullOrEmpty(n))
+            {
+                num = 0;
+                den = 1;
+                return;
+            }
             var splitedNumber = n.Split('/').ToArray();
             if (b == 10)
             {

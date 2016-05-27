@@ -123,9 +123,9 @@ namespace Calculator
                         editor.Clear();
                         break;
                     default:
-                        if (isTimeToEqual)
+                        if (isTimeToEqual || editor.Number == "∞")
                         {
-                            proc.r = proc.l = null;
+                            proc.Reset();
                             isTimeToEqual = false;
                         }
                         ClearForNewCalc();
@@ -234,7 +234,7 @@ namespace Calculator
             if (editor.Number == "") return;
 
             if (editor.Number == "NaN") return;
-            if (editor.Number == "∞")
+            if (editor.Number == "∞" || proc.l?.ToString() == "∞" || proc.r?.ToString() == "∞")
             {
                 prevNum = proc.l;
                 proc.Reset();
