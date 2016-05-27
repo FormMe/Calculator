@@ -233,7 +233,13 @@ namespace Calculator
             proc.func = Function.None;
             if (editor.Number == "") return;
 
-            if(editor.Number == "NaN") return;
+            if (editor.Number == "NaN") return;
+            if (editor.Number == "∞")
+            {
+                prevNum = proc.l;
+                proc.Reset();
+                return;
+            }
             var tmpNum = ToNumber(editor.Number);
             if (proc.l == null)
             {
@@ -272,6 +278,7 @@ namespace Calculator
         {
             var num = proc.r ?? proc.l;
             editor.Number = num?.ToString();
+    
             isNewCalc = true;
         }
 
@@ -339,7 +346,7 @@ namespace Calculator
             {
                 case Operation.Add: return "+";
                 case Operation.Sub: return "-";
-                case Operation.Div: return "/";
+                case Operation.Div: return "÷";
                 case Operation.Mult: return "*";
                 default: return "";
             }

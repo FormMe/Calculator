@@ -80,15 +80,15 @@ namespace Calculator
                         break;
                     case Function.Rev:
                         if (r != null) r = r.Rev();
-                        else l = l.Rev();
+                        else l = l?.Rev();
                         break;
                     case Function.Sqr:
                         if (r != null) r = r.Sqr();
-                        else l = l.Sqr();
+                        else l = l?.Sqr();
                         break;
                     case Function.Sqrt:
                         if (r != null) r = r.Sqrt();
-                        else l = l.Sqrt();
+                        else l = l?.Sqrt();
                         break;
                 }
 

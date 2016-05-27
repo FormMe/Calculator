@@ -182,6 +182,7 @@ namespace Calculator
         }
         public override string ToString()
         {
+            if (den == 0) return "∞";
             return Base == 0 ? num + "/" + den : Converter10p.DoTrasfer((double)num, Base) + "/" + Converter10p.DoTrasfer((double)den, Base);
         }
 
@@ -198,17 +199,15 @@ namespace Calculator
         {
             return new Frac(den, num).Reduce();
         }
-
-        private bool isNan = false;
+        
         public override bool IsNaN()
         {
-            return isNan;
+            return false;
         }
 
 
         public override Number Rev()
         {
-            if (num == 0) isNan = true;
             return new Frac(den, num).Reduce();
         }
 
