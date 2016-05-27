@@ -278,7 +278,7 @@ namespace Calculator
         {
             var num = proc.r ?? proc.l;
             editor.Number = num?.ToString();
-    
+
             isNewCalc = true;
         }
 
@@ -354,27 +354,43 @@ namespace Calculator
 
         public void SetClipboard(string buffer)
         {
-            bool toSet;
-            var replace = buffer.Replace('.', dot).ToUpper();
-            if (replace.Length > 30) toSet = false;
+            buffer = buffer.ToUpper();
+            if (buffer.Length > 30) SystemSounds.Beep.Play();
             else
             {
-                if (replace.Contains(dot) && replace.Split(dot).ToArray().Length != 2) toSet = false;
-                else if (replace.Contains('-') && replace.LastIndexOf('-') != 0) toSet = false;
-                else
+                var toSet = false;
+                switch (mode)
                 {
-                    var maxChar = Converter10p.IntToPChar(Base - 1);
-                    toSet = (Base > 10)
-                       ? !(replace.Any(c => (c < '0' || c > '9') && (c < 'A' || c > maxChar) && c != '-' && c != dot))
-                       : !(replace.Any(c => (c < '0' || c > maxChar) && c != '-' && c != dot));
+                    case Mode.Real:
+                        toSet = SetReal(buffer.Replace('.', dot), dot);
+                        break;
+                    case Mode.Complex:
+                        break;
+                    case Mode.Frac:
+                        toSet = SetReal(buffer, '/');
+                        break;
+                    default:
+                        SystemSounds.Beep.Play();
+                        break;
                 }
+
+                if (toSet)
+                {
+                    editor.Number = buffer;
+                    isNewCalc = false;
+                }
+                else SystemSounds.Beep.Play();
             }
-            if (toSet)
-            {
-                editor.Number = replace;
-                isNewCalc = false;
-            }
-            else SystemSounds.Beep.Play();
+        }
+
+        private bool SetReal(string buffer, char separator)
+        {
+            if (buffer.Contains(separator) && buffer.Split(separator).ToArray().Length != 2) return false;
+            if (buffer.Contains('-') && buffer.LastIndexOf('-') != 0) return false;
+            var maxChar = Converter10p.IntToPChar(Base - 1);
+            return (Base > 10)
+                ? !(buffer.Any(c => (c < '0' || c > '9') && (c < 'A' || c > maxChar) && c != '-' && c != separator))
+                : !(buffer.Any(c => (c < '0' || c > maxChar) && c != '-' && c != separator));
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Media;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -97,7 +98,7 @@ namespace Calculator
         }
     }
 
-    public class FracEditor : RealEditor
+    public class FracEditor : Editor
     {
         public FracEditor()
         {
@@ -116,6 +117,32 @@ namespace Calculator
                 Number = Number.Substring(0, Number.Length - 2);
             else
                 Number = Number.Substring(0, Number.Length - 1);
+        }
+
+        public override void AddDigit(char n)
+        {
+            if (PCharToInt(n) > _base - 1) return;
+            switch (Number)
+            {
+                case "0":
+                    {
+                        Number = n.ToString();
+                        break;
+                    }
+                case "-0":
+                    {
+                        Number = "-" + n;
+                        break;
+                    }
+                default:
+                    {
+                        if (string.IsNullOrEmpty(Number) || Number.Last() != '/' || n != '0')
+                            Number += n;
+                        else
+                            SystemSounds.Beep.Play();
+                        break;
+                    }
+            }
         }
     }
 
