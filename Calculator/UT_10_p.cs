@@ -20,7 +20,7 @@ namespace Calculator
             return p1 < 0 ? "-" + result : result;
         }
 
-        private static char IntToPChar(long n)
+        public static char IntToPChar(long n)
         {
             char k;
             if (n >= 10)

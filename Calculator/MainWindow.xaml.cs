@@ -42,7 +42,7 @@ namespace Calculator
         {
             preHistoryText.Content = Controler.preH;
             editableNumberText.Content = Controler.editable;
-            isMem.Content = "M = " + Controler.memN;
+            if(!string.IsNullOrEmpty(Controler.memN)) isMem.Content = "M = " + Controler.memN;
         }
 
         private void ChangeMemoryStatus(string tag)
@@ -50,6 +50,8 @@ namespace Calculator
             switch (tag)
             {
                 case "MS":
+                case "M+":
+                case "M-":
                     isMem.Visibility = Visibility.Visible;
                     break;
                 case "MC":
@@ -94,5 +96,14 @@ namespace Calculator
             Print();
         }
 
+        private void CtrlC_Click(object sender, RoutedEventArgs e)
+        {
+            Clipboard.SetText(editableNumberText.Content.ToString());
+        }
+        private void CtrlV_Click(object sender, RoutedEventArgs e)
+        {
+            Controler.SetClipboard(Clipboard.GetText());
+            Print();
+        }
     }
 }

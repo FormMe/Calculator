@@ -76,12 +76,12 @@ namespace Calculator
 
         public override Number Sqr()
         {
-            if(num < 0) throw new Exception("Деление на ноль");
             return new Real(num * num, Base);
         }
 
         public override Number Sqrt()
         {
+            if (num < 0) throw new Exception("Деление на ноль");
             return new Real(Math.Sqrt(num), Base);
         }
 
@@ -184,9 +184,13 @@ namespace Calculator
 
         public override Number Sqr()
         {
-            if (num < 0) throw new Exception("Деление на ноль");
             return new Frac(num * num, den * den).Reduce();
         }
+        public override Number Sqrt()
+        {
+            return new Frac(den, num).Reduce();
+        }
+
 
         public override Number Rev()
         {

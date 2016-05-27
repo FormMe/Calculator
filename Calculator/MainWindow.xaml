@@ -13,14 +13,17 @@
                 <MenuItem Name="FracMode" Header="Простые дроби" IsCheckable="True" Click="MenuItem_Click"></MenuItem>
                 <MenuItem Name="ComplexMode" Header="Комплексные числа" IsCheckable="True" Click="MenuItem_Click"></MenuItem>
             </MenuItem>
-            <MenuItem Header="Правка"  />
+            <MenuItem Header="Правка" >
+                <MenuItem Name="CtrlC" Header="Копировать" IsCheckable="True" Click="CtrlC_Click" ></MenuItem>
+                <MenuItem Name="CtrlV" Header="Вставить" IsCheckable="True" Click="CtrlV_Click"></MenuItem>
+            </MenuItem>
+            <MenuItem Header="История"  />
             <MenuItem Header="Справка" />
-            <MenuItem Header="История"/>
         </Menu>
 
         <Border BorderBrush="#FF34407A" BorderThickness="1" HorizontalAlignment="Left" Height="100" Margin="10,30,0,0" VerticalAlignment="Top" Width="335" Background="#FFA3D6E6">
             <Grid HorizontalAlignment="Left" Height="97" VerticalAlignment="Top" Width="335" Margin="-1,2,-1,-1">
-                <Label x:Name="editableNumberText" Content="65165165165" Margin="0,0,10,12" VerticalAlignment="Bottom" HorizontalContentAlignment="Right" HorizontalAlignment="Right" Width="315" FontSize="29.333" Height="57" FontFamily="Calibri"/>
+                <Label x:Name="editableNumberText" Content="00000" Margin="0,0,10,12" VerticalAlignment="Bottom" HorizontalContentAlignment="Right" HorizontalAlignment="Right" Width="315" FontSize="29.333" Height="57" FontFamily="Calibri"/>
                 <Label x:Name="preHistoryText" Content="6516516515" Margin="10,-2,0,50" VerticalAlignment="Center" HorizontalContentAlignment="Right" FontSize="16" Height="49" HorizontalAlignment="Left" Width="315" Foreground="#FF646464" FontFamily="Calibri"/>
                 <Label x:Name="isMem" Content="M" HorizontalAlignment="Left" Margin="0,71,0,0" VerticalAlignment="Top" Width="330" Visibility="Hidden"/>
             </Grid>

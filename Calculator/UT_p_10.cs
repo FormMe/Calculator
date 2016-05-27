@@ -15,14 +15,14 @@ namespace Calculator
         {
             if (b < 2 || b > 16) throw new Exception("Неверная система счисления");
             _base = b;
-            int sign = Convert.ToInt32(p1[0] == '-');
-            var dot_ind = p1.IndexOf(Cntrl.dot);
+            var sign = Convert.ToInt32(p1[0] == '-');
+            var dotInd = p1.IndexOf(Cntrl.dot);
             double result = 0;
-            if (dot_ind == -1) result = PIntTo10(p1);
+            if (dotInd == -1) result = PIntTo10(p1);
             else
             {
-                var floor = p1.Substring(sign, dot_ind);
-                var fract = p1.Substring(dot_ind + 1, p1.Length - dot_ind - 1);
+                var floor = p1.Substring(sign, dotInd - 1);
+                var fract = p1.Substring(dotInd + 1, p1.Length - dotInd - 1);
                 result = PIntTo10(floor) + PFracTo10(fract);
             }
             return sign == 1 ? -1 * result : result;
@@ -33,7 +33,7 @@ namespace Calculator
             return (a >= 'A') ? 10 + ((int)a - (int)'A') : int.Parse(a.ToString());
         }
 
-        private static double PIntTo10(string floor) 
+        private static double PIntTo10(string floor)
         {
             double dec = 0;
             int j, k;

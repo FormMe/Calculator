@@ -30,12 +30,22 @@ namespace Calculator
 
         public void Add(Number e)
         {
-            if (stat) _num += e;
+            if (!stat)
+            {
+                _num = e;
+                stat = true;
+            }
+            else _num += e;
         }
 
         public void Sub(Number e)
         {
-            if (stat) _num -= e;
+            if (!stat)
+            {
+                _num = -e;
+                stat = true;
+            }
+            else _num -= e;
         }
     }
 }

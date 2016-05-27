@@ -43,7 +43,7 @@ namespace Calculator
         public abstract void BackSpace();
         public abstract void AddDigit(char n);
 
-        protected int PCharToInt(char a)
+        public static int PCharToInt(char a)
         {
             return (a >= 'A') ? 10 + ((int)a - (int)'A') : int.Parse(a.ToString());
         }
@@ -66,7 +66,8 @@ namespace Calculator
         {
             if (string.IsNullOrEmpty(Number)) return;
 
-            if (Number[Number.Length - 1] == '0' && Number[Number.Length - 2] == Cntrl.dot)
+            if (Number[Number.Length - 1] == '0' && Number[Number.Length - 2] == Cntrl.dot ||
+                Number.Length == 2 && Number.First() == '-')
                 Number = Number.Substring(0, Number.Length - 2);
             else
                 Number = Number.Substring(0, Number.Length - 1);

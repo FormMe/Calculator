@@ -22,7 +22,7 @@ namespace Calculator
         Sqr,
         Sqrt
     };
-    
+
     class Proc
     {
         public Number l { get; set; }
@@ -91,7 +91,7 @@ namespace Calculator
                         else l = l.Sqrt();
                         break;
                 }
-                
+
             }
             catch (Exception ex)
             {

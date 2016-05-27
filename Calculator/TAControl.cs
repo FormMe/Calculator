@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.Globalization;
 using System.IO.Packaging;
 using System.Linq;
+using System.Media;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -56,6 +57,7 @@ namespace Calculator
 
         private bool isNewCalc = true;
         private bool isTimeToEqual = false;
+        private bool isOpAndFunc = false;
 
         private string GetMem()
         {
@@ -105,42 +107,62 @@ namespace Calculator
                         editor.Separate();
                         break;
                     case "+/-":
-                        ClearForNewCalc();
+                        //  ClearForNewCalc();
                         editor.Sign();
                         break;
                     case "CE":
                     case "Delete":
+                        ClearForNewCalc();
                         editor.Clear(); break;
                     case "BackSpace":
                     case "Back":
                         editor.BackSpace(); break;
                     case "C":
+                        ClearForNewCalc();
                         proc.Reset();
                         editor.Clear();
                         break;
                     default:
+                        if (isTimeToEqual)
+                        {
+                            proc.r = proc.l = null;
+                            isTimeToEqual = false;
+                        }
                         ClearForNewCalc();
                         editor.AddDigit(char.Parse(command));
                         break;
 
                     case "MR":
                         if (memory.Num != null)
+                        {
                             editor.Number = memory.Num.ToString();
+                            isNewCalc = false;
+                        }
                         break;
                     case "MS":
-                        if (editor.Number != "")
+                        if (!string.IsNullOrEmpty(editor.Number))
+                        {
                             memory.Num = ToNumber(editor.Number);
-                        editor.Clear();
+                            isNewCalc = true;
+                        }
                         break;
                     case "MC":
-                        memory.Clear(); break;
+                        memory.Clear();
+                        isNewCalc = true;
+                        break;
                     case "M+":
-                        if (editor.Number != "")
+                        if (!string.IsNullOrEmpty(editor.Number))
+                        {
                             memory.Add(ToNumber(editor.Number));
+                            isNewCalc = true;
+                        }
                         break;
                     case "M-":
-                        if (editor.Number != "")
+                        if (!string.IsNullOrEmpty(editor.Number))
+                        {
                             memory.Sub(ToNumber(editor.Number));
+                            isNewCalc = true;
+                        }
                         break;
 
                     case "-":
@@ -187,8 +209,9 @@ namespace Calculator
                         break;
                     case "=":
                         SetNum(command);
+                        if (!isTimeToEqual && proc.l != null) break;
                         proc.RunOperation();
-                        editor.Number = proc.l.ToString();
+                        SetResult();
                         break;
                 }
             }
@@ -211,7 +234,10 @@ namespace Calculator
             if (editor.Number == "") return;
 
             if (proc.l == null)
-                proc.l = ToNumber(editor.Number);
+            {
+                if (command == "=") return;
+                proc.l = prevNum = ToNumber(editor.Number);
+            }
             else
             {
                 var tmpNum = ToNumber(editor.Number);
@@ -223,9 +249,20 @@ namespace Calculator
                     isTimeToEqual = true;
                     return;
                 }
+                if (operations.Contains(command) && proc.op == Operation.None && proc.r == null)
+                {
+                    prevNum = proc.l;
+                    proc.l = tmpNum;
+                    isTimeToEqual = false;
+                    return;
+                }
                 isTimeToEqual = false;
                 prevNum = null;
-                if (isNewCalc && !operations.Contains(command)) return;
+                if (isNewCalc && !operations.Contains(command))
+                {
+                    if (!isNewCalc) proc.r = tmpNum;
+                    return;
+                }
                 prevNum = proc.r ?? tmpNum;
                 proc.r = tmpNum;
             }
@@ -233,17 +270,26 @@ namespace Calculator
         private void SetResult()
         {
             var num = proc.r ?? proc.l;
-            editor.Number = num.ToString();
+            editor.Number = num?.ToString();
             isNewCalc = true;
         }
 
         private string MakePreH()
         {
+            if (proc == null) return "";
+            //if (proc.l.IsNaN() || proc.r.IsNaN()) return "Недопустимый ввод";
             if (proc.l == null || proc.l.EqZero() || isTimeToEqual) return "";
-            var upString = proc.l + " " + OperationToString(proc.op) + " ";
             var command = proc.func.ToString();
-            if (!operations.Contains(command)) return upString;
-            return upString + command + "(" + prevNum + ")";
+
+            var isContains = operations.Contains(command);
+            var func = command + "(" + prevNum + ")";
+            if (isContains && proc.r == null && proc.l != null)
+                return func;
+
+            var upString = proc.l + " " + OperationToString(proc.op) + " ";
+            if (!isContains) return upString;
+
+            return upString + func;
         }
 
         private Number ToNumber(string n)
@@ -282,6 +328,31 @@ namespace Calculator
                 case Operation.Mult: return "*";
                 default: return "";
             }
+        }
+
+        public void SetClipboard(string buffer)
+        {
+            bool toSet;
+            var replace = buffer.Replace('.', dot).ToUpper();
+            if (replace.Length > 30) toSet = false;
+            else
+            {
+                if (replace.Contains(dot) && replace.Split(dot).ToArray().Length != 2) toSet = false;
+                else if (replace.Contains('-') && replace.LastIndexOf('-') != 0) toSet = false;
+                else
+                {
+                    var maxChar = Converter10p.IntToPChar(Base - 1);
+                    toSet = (Base > 10)
+                       ? !(replace.Any(c => (c < '0' || c > '9') && (c < 'A' || c > maxChar) && c != '-' && c != dot))
+                       : !(replace.Any(c => (c < '0' || c > maxChar) && c != '-' && c != dot));
+                }
+            }
+            if (toSet)
+            {
+                editor.Number = replace;
+                isNewCalc = false;
+            }
+            else SystemSounds.Beep.Play();
         }
     }
 }
