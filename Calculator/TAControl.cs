@@ -26,7 +26,7 @@ namespace Calculator
         private Proc proc;
 
         public string preH => MakePreH();
-        public string editable => editor.Number;
+        public string editable => GetNum();
         public string memN => GetMem();
         public int Base
         {
@@ -233,14 +233,15 @@ namespace Calculator
             proc.func = Function.None;
             if (editor.Number == "") return;
 
+            if(editor.Number == "NaN") return;
+            var tmpNum = ToNumber(editor.Number);
             if (proc.l == null)
             {
                 if (command == "=") return;
-                proc.l = prevNum = ToNumber(editor.Number);
+                prevNum = proc.l = tmpNum;
             }
             else
             {
-                var tmpNum = ToNumber(editor.Number);
                 if (command == "=")
                 {
                     if (!isTimeToEqual || prevNum == null) prevNum = tmpNum;
@@ -276,9 +277,7 @@ namespace Calculator
 
         private string MakePreH()
         {
-            if (proc == null) return "";
-            //if (proc.l.IsNaN() || proc.r.IsNaN()) return "Недопустимый ввод";
-            if (proc.l == null || proc.l.EqZero() || isTimeToEqual) return "";
+            if (proc?.l == null || proc.l.EqZero() || isTimeToEqual) return "";
             var command = proc.func.ToString();
 
             var isContains = operations.Contains(command);
@@ -290,6 +289,21 @@ namespace Calculator
             if (!isContains) return upString;
 
             return upString + func;
+        }
+
+        private string GetNum()
+        {
+            if (isNewCalc && proc.r != null && proc.r.IsNaN())
+            {
+                proc.r = null;
+                return "Недопустимый ввод";
+            }
+            if (isNewCalc && proc.l != null && proc.l.IsNaN())
+            {
+                proc.l = null;
+                return "Недопустимый ввод";
+            }
+            return editor.Number;
         }
 
         private Number ToNumber(string n)

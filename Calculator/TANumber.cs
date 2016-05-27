@@ -21,6 +21,8 @@ namespace Calculator
         {
             return this;
         }
+
+        public abstract bool IsNaN();
         public abstract Number Rev();
 
         public static Number operator +(Number l, Number r) => l.Plus(r);
@@ -81,8 +83,12 @@ namespace Calculator
 
         public override Number Sqrt()
         {
-            if (num < 0) throw new Exception("Деление на ноль");
             return new Real(Math.Sqrt(num), Base);
+        }
+
+        public override bool IsNaN()
+        {
+            return double.IsNaN(num);
         }
 
         public override Number Rev()
@@ -189,6 +195,11 @@ namespace Calculator
         public override Number Sqrt()
         {
             return new Frac(den, num).Reduce();
+        }
+
+        public override bool IsNaN()
+        {
+            return false;
         }
 
 
@@ -329,6 +340,11 @@ namespace Calculator
         public override Number Sqrt()
         {
             throw new NotImplementedException();
+        }
+
+        public override bool IsNaN()
+        {
+            return Re.IsNaN() || Re.IsNaN();
         }
 
         public override Number Rev()

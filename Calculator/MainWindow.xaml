@@ -14,10 +14,9 @@
                 <MenuItem Name="ComplexMode" Header="Комплексные числа" IsCheckable="True" Click="MenuItem_Click"></MenuItem>
             </MenuItem>
             <MenuItem Header="Правка" >
-                <MenuItem Name="CtrlC" Header="Копировать" IsCheckable="True" Click="CtrlC_Click" ></MenuItem>
-                <MenuItem Name="CtrlV" Header="Вставить" IsCheckable="True" Click="CtrlV_Click"></MenuItem>
+                <MenuItem Name="CtrlC" Header="Копировать" Click="CtrlC_Click" ></MenuItem>
+                <MenuItem Name="CtrlV" Header="Вставить"  Click="CtrlV_Click"></MenuItem>
             </MenuItem>
-            <MenuItem Header="История"  />
             <MenuItem Header="Справка" />
         </Menu>
 
