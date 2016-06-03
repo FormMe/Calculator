@@ -361,12 +361,29 @@ namespace Calculator
                 switch (mode)
                 {
                     case Mode.Real:
-                        toSet = SetNum(buffer.Replace('.', dot), dot);
+                        toSet = SetNumClipboard(buffer.Replace('.', dot), dot);
                         break;
                     case Mode.Complex:
+                        if (buffer.Contains("+"))
+                        {
+                            var splitedNumber = buffer.Split('+').ToArray();
+                            toSet = SetNumClipboard(splitedNumber[0].Replace('.', dot), dot) &&
+                                splitedNumber[1].Last() == 'I' &&
+                                SetNumClipboard(splitedNumber[1].Replace('.', dot).Substring(0, splitedNumber[1].Length - 1), dot);
+                        }
+                        else
+                        {
+                            if (buffer.Last() == 'I' &&
+                                SetNumClipboard(buffer.Replace('.', dot).Substring(0, buffer.Length - 1), dot))
+                            {
+                                buffer = "0 + " + buffer;
+                                toSet = true;
+                            }
+                            else if (SetNumClipboard(buffer.Replace('.', dot), dot)) toSet = true;
+                        }
                         break;
                     case Mode.Frac:
-                        toSet = SetNum(buffer, '/');
+                        toSet = SetNumClipboard(buffer, '/');
                         break;
                     default:
                         SystemSounds.Beep.Play();
@@ -375,14 +392,14 @@ namespace Calculator
 
                 if (toSet)
                 {
-                    editor.Number = buffer;
+                    editor.Number = buffer.Replace('.', dot);
                     isNewCalc = false;
                 }
                 else SystemSounds.Beep.Play();
             }
         }
 
-        private bool SetNum(string buffer, char separator)
+        private bool SetNumClipboard(string buffer, char separator)
         {
             if (buffer.Contains(separator) && buffer.Split(separator).ToArray().Length != 2) return false;
             if (buffer.Contains('-') && buffer.LastIndexOf('-') != 0) return false;
