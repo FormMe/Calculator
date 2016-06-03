@@ -45,7 +45,6 @@ namespace Calculator
         {
             preHistoryText.Content = Controler.preH;
             editableNumberText.Content = Controler.editable;
-            if (!string.IsNullOrEmpty(Controler.memN)) isMem.Content = "M = " + Controler.memN;
         }
 
         private void ChangeMemoryStatus(string tag)
@@ -76,21 +75,26 @@ namespace Calculator
                     Controler = new Cntrl(Mode.Real);
                     Dot.Content = ",";
                     Sqrt.Visibility = Visibility.Visible;
+                    ComplexSeparate.Visibility = Visibility.Hidden;
                     break;
                 case "Простые дроби":
                     ComplexMode.IsChecked = false;
                     RealMode.IsChecked = false;
                     Controler = new Cntrl(Mode.Frac);
                     Sqrt.Visibility = Visibility.Hidden;
+                    ComplexSeparate.Visibility = Visibility.Hidden;
                     Dot.Content = "/";
                     break;
                 case "Комплексные числа":
                     RealMode.IsChecked = false;
                     FracMode.IsChecked = false;
                     Controler = new Cntrl(Mode.Complex);
+                    Dot.Content = ",";
+                    ComplexSeparate.Visibility = Visibility.Visible;
                     Sqrt.Visibility = Visibility.Hidden;
                     break;
             }
+            isMem.Visibility = Visibility.Hidden;
             Print();
         }
 

@@ -80,6 +80,7 @@
                 <Button x:Name="Sqr" Content="Sqr" HorizontalAlignment="Left" Margin="265,65,0,0" VerticalAlignment="Top" Width="50" Height="24" RenderTransformOrigin="1.531,0.833" FontSize="15" Background="#FFA3D6E6" Foreground="#FFF00000" BorderBrush="#FFA3D6E6" />
                 <Button x:Name="Mminus" Content="M-" HorizontalAlignment="Left" Margin="9,150,0,0" VerticalAlignment="Top" Width="48" Height="24" RenderTransformOrigin="0.5,0.5" FontSize="15"     Background="#FFA3D6E6" Foreground="#FFF00000" BorderBrush="#FFA3D6E6"/>
                 <Button x:Name="Sqrt" Content="Sqrt" HorizontalAlignment="Left" Margin="265,94,0,0" VerticalAlignment="Top" Width="50" Height="24" RenderTransformOrigin="1.531,0.833" FontSize="15" Background="#FFA3D6E6" Foreground="#FFF00000" BorderBrush="#FFA3D6E6" />
+                <Button x:Name="ComplexSeparate" Content="Re/Im" Visibility="Hidden" HorizontalAlignment="Left" Margin="9,178,0,0" VerticalAlignment="Top" Width="48" Height="24" RenderTransformOrigin="0.5,0.5" FontSize="15"     Background="#FFA3D6E6" Foreground="Black" BorderBrush="#FFA3D6E6"/>
             </Grid>
         </Border>
 

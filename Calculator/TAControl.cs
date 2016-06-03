@@ -107,6 +107,11 @@ namespace Calculator
                         ClearForNewCalc();
                         editor.Separate();
                         break;
+                    case "Re/Im":
+                        ClearForNewCalc();
+                        editor.ComplexSeparate();
+                        isNewCalc = false;
+                        break;
                     case "±":
                         editor.Sign();
                         break;
@@ -362,12 +367,12 @@ namespace Calculator
                 switch (mode)
                 {
                     case Mode.Real:
-                        toSet = SetReal(buffer.Replace('.', dot), dot);
+                        toSet = SetNum(buffer.Replace('.', dot), dot);
                         break;
                     case Mode.Complex:
                         break;
                     case Mode.Frac:
-                        toSet = SetReal(buffer, '/');
+                        toSet = SetNum(buffer, '/');
                         break;
                     default:
                         SystemSounds.Beep.Play();
@@ -383,7 +388,7 @@ namespace Calculator
             }
         }
 
-        private bool SetReal(string buffer, char separator)
+        private bool SetNum(string buffer, char separator)
         {
             if (buffer.Contains(separator) && buffer.Split(separator).ToArray().Length != 2) return false;
             if (buffer.Contains('-') && buffer.LastIndexOf('-') != 0) return false;

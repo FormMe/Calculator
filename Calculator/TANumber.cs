@@ -175,7 +175,7 @@ namespace Calculator
             {
                 BigInteger.TryParse(splitedNumber[0], out num);
                 if (splitedNumber.Length == 1 ||
-                    string.IsNullOrEmpty(splitedNumber[1]) ) den = 1;
+                    string.IsNullOrEmpty(splitedNumber[1])) den = 1;
                 else BigInteger.TryParse(splitedNumber[1], out den);
             }
             else
@@ -205,7 +205,7 @@ namespace Calculator
         {
             return new Frac(den, num).Reduce();
         }
-        
+
         public override bool IsNaN()
         {
             return false;
@@ -325,9 +325,18 @@ namespace Calculator
 
         public Complex(string n, int b)
         {
-            var nn = n.Split('/').ToArray();
-            Re = new Real(nn[0], b);
-            Im = new Real(nn[1], b);
+            if (n.Contains("+"))
+            {
+                var splitedNumber = n.Split('+').ToArray();
+                Re = new Real(splitedNumber[0], b);
+                Im = new Real(splitedNumber[1].Substring(0, splitedNumber[1].Length - 1), b);
+            }
+            else
+            {
+                Re = new Real(n, b);
+                Im = new Real(0, b);
+            }
+            Base = b;
         }
         public override string ToString()
         {
