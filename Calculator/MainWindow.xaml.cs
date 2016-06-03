@@ -95,6 +95,7 @@ namespace Calculator
                     break;
             }
             isMem.Visibility = Visibility.Hidden;
+            Slider.Value = 10;
             Print();
         }
 

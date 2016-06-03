@@ -13,7 +13,14 @@ namespace Calculator
         {
             return base.ToString();
         }
-        public int Base = 10;
+
+        protected int _base;
+
+        public virtual int Base
+        {
+            get { return _base; }
+            set { _base = value; }
+        }
 
         public abstract bool EqZero();
         public abstract Number Sqr();
@@ -308,6 +315,18 @@ namespace Calculator
     {
         Real Re;
         Real Im;
+
+        public override int Base
+        {
+            get { return _base; }
+            set
+            {
+                _base = value;
+                if (Re == null || Im == null) return;
+                Re.Base = value;
+                Im.Base = value;
+            }
+        }
 
         public Complex(double re, double im, int b)
         {

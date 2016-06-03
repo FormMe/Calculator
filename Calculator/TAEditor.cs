@@ -13,13 +13,14 @@ namespace Calculator
     {
         protected int _base = 10;
         public string Number { get; set; }
-        public int Base
+        public virtual int Base
         {
             set
             {
                 if (value < 2 || value > 16) throw new Exception("Неверная система счисления");
                 var prevBase = _base;
                 _base = value;
+                if(string.IsNullOrEmpty(Number)) return;
                 Number = Cntrl.Convert(Number, prevBase, _base);
             }
             get { return _base; }
@@ -158,6 +159,19 @@ namespace Calculator
         RealEditor Im;
         bool _isIm;
 
+        public override int Base
+        {
+            set
+            {
+                if (value < 2 || value > 16) throw new Exception("Неверная система счисления");
+                _base = value;
+                Im.Base = value;
+                Re.Base = value;
+                SetNumber();
+            }
+            get { return _base; }
+        }
+
         public override void Separate()
         {
             if (_isIm) Im.Separate();
@@ -166,7 +180,7 @@ namespace Calculator
         }
         public override void ComplexSeparate()
         {
-            if(_isIm) return;
+            if (_isIm) return;
             _isIm = true;
             if (string.IsNullOrEmpty(Re.Number)) Re.Number = "0";
             SetNumber();

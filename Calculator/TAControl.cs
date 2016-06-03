@@ -27,7 +27,6 @@ namespace Calculator
 
         public string preH => MakePreH();
         public string editable => GetNum();
-        public string memN => GetMem();
         public int Base
         {
             set
@@ -58,11 +57,6 @@ namespace Calculator
         private bool isNewCalc = true;
         private bool isTimeToEqual = false;
         private bool isOpAndFunc = false;
-
-        private string GetMem()
-        {
-            return memory.Num?.ToString() ?? "";
-        }
 
         public Cntrl(Mode m)
         {
