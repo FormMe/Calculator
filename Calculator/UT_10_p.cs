@@ -16,7 +16,7 @@ namespace Calculator
             var floor = Math.Floor(Math.Abs(p1));
             var fract = Math.Abs(p1) - floor;
             var result = Int10ToP(floor);
-            if (fract != 0) result += Frac10ToP(fract);
+            if (Math.Abs(fract) > 1e-20) result += Frac10ToP(fract);
             return p1 < 0 ? "-" + result : result;
         }
 

@@ -25,7 +25,7 @@ namespace Calculator
         private Memory memory;
         private Proc proc;
 
-        public string preH => MakePreH();
+        public Tuple<string,string,string> preH => MakePreH();
         public string editable => GetNum();
         public int Base
         {
@@ -281,20 +281,22 @@ namespace Calculator
             isNewCalc = true;
         }
 
-        private string MakePreH()
+        private Tuple<string, string, string> MakePreH()
         {
-            if (proc?.l == null || isTimeToEqual) return "";
+            if (proc?.l == null || isTimeToEqual) return null;
             var command = proc.func.ToString();
-
+            
             var isContains = operations.Contains(command);
+            
             var func = command + "(" + prevNum + ")";
+
             if (isContains && proc.r == null && proc.l != null)
-                return func;
+                return new Tuple<string, string, string>(func, null,null);
 
-            var upString = proc.l + " " + OperationToString(proc.op) + " ";
-            if (!isContains) return upString;
+           // var upString = proc.l + " " + OperationToString(proc.op) + " ";
+            if (!isContains) return new Tuple<string, string, string>(proc.l.ToString(), OperationToString(proc.op), null);
 
-            return upString + func;
+            return new Tuple<string, string, string>(proc.l.ToString(), OperationToString(proc.op), func);
         }
 
         private string GetNum()

@@ -41,10 +41,25 @@ namespace Calculator
             Print();
         }
 
-        public void Print()
+        private void Print()
         {
-            preHistoryText.Content = Controler.preH;
+            var column = Controler.preH;
+
+            if (column?.Item1 != null)
+                UpColumnItem.Content = column.Item1;
+            else UpColumnItem.Content = "";
+
+            if (column?.Item2 != null)
+            {
+                DownColumnItem.Content = column.Item2;
+                if (column?.Item3 != null)
+                    DownColumnItem.Content += "  " + column.Item3;
+            }
+            else DownColumnItem.Content = "";
+
+
             editableNumberText.Content = Controler.editable;
+            editableNumberText_ContentChanged();
         }
 
         private void ChangeMemoryStatus(string tag)
@@ -137,6 +152,22 @@ namespace Calculator
         {
             Controler.SetClipboard(Clipboard.GetText());
             Print();
+        }
+
+        private void editableNumberText_ContentChanged()
+        {
+            if (string.IsNullOrEmpty(editableNumberText.Content?.ToString())) return;
+            var len = editableNumberText.Content.ToString().Length;
+            if (len < 15)
+                editableNumberText.FontSize = 32;
+            else if (len < 18)
+                editableNumberText.FontSize = 30;
+            else if (len < 21)
+                editableNumberText.FontSize = 28;
+            else if (len < 24)
+                editableNumberText.FontSize = 26;
+            else
+                editableNumberText.FontSize = 24;
         }
     }
 }
