@@ -208,10 +208,7 @@ namespace Calculator
         {
             return new Frac(num * num, den * den).Reduce();
         }
-        public override Number Sqrt()
-        {
-            return new Frac(den, num).Reduce();
-        }
+
 
         public override bool IsNaN()
         {
@@ -221,6 +218,11 @@ namespace Calculator
 
         public override Number Rev()
         {
+            if (num < 0)
+            {
+                num = -num;
+                den = -den;
+            }
             return new Frac(den, num).Reduce();
         }
 

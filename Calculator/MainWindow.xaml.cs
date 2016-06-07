@@ -41,6 +41,29 @@ namespace Calculator
             Print();
         }
 
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            var k = e.Key.ToString();
+            if (k.Contains("NumPad"))
+                Controler.DoCommand(k.Substring(6, 1));
+            else
+            {
+                if (k.Contains("D") && k.Length == 2)
+                    Controler.DoCommand(k.Substring(1, 1));
+                else
+                {
+                    if (k.Length == 1 || k == "Subtract" || k == "Add" || k == "Multiply" || k == "Divide" || k == "Decimal" || k == "Back" || k == "Delete")
+                        Controler.DoCommand(k);
+                    else
+                        if (k == "Enter" || k == "Return")
+                       Controler.DoCommand(k);
+                }
+            }
+            e.Handled = true;
+            UpColumnItem.Focus();
+            Print();
+        }
+
         private void Print()
         {
             var column = Controler.preH;

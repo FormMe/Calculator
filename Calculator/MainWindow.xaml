@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Calculator"
         mc:Ignorable="d"
-        Title="Универсальный калькулятор" Height="452.666" Width="371.166" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize">
+        Title="Универсальный калькулятор" Height="452.666" Width="371.166" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize" KeyDown="Window_KeyDown">
     <Grid Background="#FF74B8CD" Button.Click="ButtonClick">
         <Menu Height="25" VerticalAlignment="Top">
             <MenuItem Header="Настройка" >

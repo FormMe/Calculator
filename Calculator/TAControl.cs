@@ -25,7 +25,7 @@ namespace Calculator
         private Memory memory;
         private Proc proc;
 
-        public Tuple<string,string,string> preH => MakePreH();
+        public Tuple<string, string, string> preH => MakePreH();
         public string editable => GetNum();
         public int Base
         {
@@ -128,7 +128,8 @@ namespace Calculator
                             isTimeToEqual = false;
                         }
                         ClearForNewCalc();
-                        editor.AddDigit(char.Parse(command));
+                        if (editor.Number.Length > 24) SystemSounds.Beep.Play();
+                        else editor.AddDigit(char.Parse(command));
                         break;
 
                     case "MR":
@@ -165,24 +166,28 @@ namespace Calculator
                         break;
 
                     case "-":
+                    case "Subtract": 
                         SetNum(command);
                         proc.RunOperation();
                         proc.op = prevOp = Operation.Sub;
                         SetResult();
                         break;
                     case "+":
+                    case "Add": 
                         SetNum(command);
                         proc.RunOperation();
                         proc.op = prevOp = Operation.Add;
                         SetResult();
                         break;
                     case "*":
+                    case "Multiply":
                         SetNum(command);
                         proc.RunOperation();
                         proc.op = prevOp = Operation.Mult;
                         SetResult();
                         break;
                     case "÷":
+                    case "Divide":
                         SetNum(command);
                         proc.RunOperation();
                         proc.op = prevOp = Operation.Div;
@@ -207,6 +212,8 @@ namespace Calculator
                         SetResult();
                         break;
                     case "=":
+                    case "Enter":
+                    case "Return":
                         SetNum(command);
                         if (!isTimeToEqual && proc.l != null) break;
                         proc.RunOperation();
@@ -239,15 +246,15 @@ namespace Calculator
                 proc.Reset();
                 return;
             }
-            var tmpNum = ToNumber(editor.Number);
-            if (proc.l == null)
+            var tmpNum = ToNumber(editor.Number); 
+            if (proc.l == null)                   
             {
-                if (command == "=") return;
+                if (command == "=" || command == "Enter" || command == "Return") return;
                 prevNum = proc.l = tmpNum;
             }
             else
             {
-                if (command == "=")
+                if (command == "=" || command == "Enter" || command == "Return")
                 {
                     if (!isTimeToEqual || prevNum == null) prevNum = tmpNum;
                     proc.op = prevOp;
@@ -285,23 +292,21 @@ namespace Calculator
         {
             if (proc?.l == null || isTimeToEqual) return null;
             var command = proc.func.ToString();
-            
+
             var isContains = operations.Contains(command);
-            
+
             var func = command + "(" + prevNum + ")";
 
             if (isContains && proc.r == null && proc.l != null)
-                return new Tuple<string, string, string>(func, null,null);
+                return new Tuple<string, string, string>(func, null, null);
 
-           // var upString = proc.l + " " + OperationToString(proc.op) + " ";
-            if (!isContains) return new Tuple<string, string, string>(proc.l.ToString(), OperationToString(proc.op), null);
-
-            return new Tuple<string, string, string>(proc.l.ToString(), OperationToString(proc.op), func);
+            return !isContains
+                ? new Tuple<string, string, string>(proc.l.ToString(), OperationToString(proc.op), null)
+                : new Tuple<string, string, string>(proc.l.ToString(), OperationToString(proc.op), func);
         }
 
         private string GetNum()
         {
-            //рев для дробей не робит. деление на ноль. сделать нан
             if (isNewCalc && proc.r != null && proc.r.IsNaN())
             {
                 proc.r = null;
@@ -341,7 +346,7 @@ namespace Calculator
                     : Converter10p.DoTrasfer(ConverterP10.DoTrasfer(number, p1), p2));
         }
 
-        public static string OperationToString(Operation op)
+        private static string OperationToString(Operation op)
         {
             switch (op)
             {
@@ -356,7 +361,7 @@ namespace Calculator
         public void SetClipboard(string buffer)
         {
             buffer = buffer.ToUpper();
-            if (buffer.Length > 30) SystemSounds.Beep.Play();
+            if (string.IsNullOrEmpty(buffer) || buffer.Length > 24) SystemSounds.Beep.Play();
             else
             {
                 var toSet = false;
